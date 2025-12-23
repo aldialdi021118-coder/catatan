@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Keuangan Pro Online (Sync)</title>
+    <title>Keuangan Pro V16 (Lock System)</title>
     
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
@@ -17,6 +17,7 @@
             --profit: #d97706;
             --loss: #ef4444;
             --fixed-exp: #7c3aed;
+            --success: #10b981;
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -28,108 +29,97 @@
             padding-bottom: 100px;
         }
 
-        /* STATUS BAR */
-        .status-bar {
-            background: #fff;
-            padding: 8px;
-            text-align: center;
-            font-size: 0.75rem;
+        /* CONTROL BAR (NEW) */
+        .control-bar {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 15px;
+            gap: 10px;
+        }
+
+        /* INPUT STYLES FOR LOCKING */
+        input:disabled {
+            background-color: #e2e8f0; /* Abu-abu saat dikunci */
             color: #64748b;
-            border-bottom: 1px solid #e2e8f0;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
+            border-color: #cbd5e1;
+            cursor: not-allowed;
         }
+        
+        input {
+            width: 100%; padding: 14px; border: 1px solid #cbd5e1; border-radius: 12px;
+            font-size: 1rem; margin-bottom: 16px; background: white; outline: none;
+            transition: all 0.3s;
+        }
+        .input-sm { margin-bottom: 5px; font-size: 0.9rem; padding: 10px; }
+        input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); }
 
-        /* NAVIGATION */
-        .bottom-nav {
-            position: fixed; bottom: 0; left: 0; right: 0;
-            background: white; display: grid; 
-            grid-template-columns: repeat(5, 1fr);
-            padding: 10px 0; box-shadow: 0 -4px 20px rgba(0,0,0,0.05); z-index: 999;
-            border-top-left-radius: 20px; border-top-right-radius: 20px;
+        /* BUTTONS */
+        .btn-primary { width: 100%; background: var(--primary); color: white; padding: 16px; border: none; border-radius: 12px; font-weight: 600; font-size: 1rem; cursor: pointer; transition: 0.2s; }
+        
+        /* Tombol Edit & Simpan Kecil */
+        .btn-action-sm {
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
-        .nav-item {
-            border: none; background: none; display: flex; flex-direction: column; align-items: center;
-            font-size: 0.65rem; color: var(--text-light); cursor: pointer; transition: 0.2s;
-        }
-        .nav-icon { font-size: 1.3rem; margin-bottom: 3px; }
-        .nav-item.active { color: var(--primary); font-weight: 700; }
+        .btn-edit-mode { background: #3b82f6; color: white; } /* Biru */
+        .btn-save-mode { background: var(--success); color: white; display: none; } /* Hijau, default hidden */
 
-        /* LAYOUT */
+        /* LAYOUT & CARDS */
         .container { max-width: 600px; margin: 0 auto; padding: 20px 16px; }
         .tab-content { display: none; animation: fadeEffect 0.3s; }
         .tab-content.active { display: block; }
         @keyframes fadeEffect { from {opacity: 0; transform: translateY(10px);} to {opacity: 1; transform: translateY(0);} }
-
-        /* CARDS */
-        .main-card {
-            background: linear-gradient(135deg, #0f172a, #334155);
-            color: white; border-radius: 24px; padding: 24px; text-align: center;
-            margin-bottom: 24px; box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.4);
-        }
+        
+        .main-card { background: linear-gradient(135deg, #0f172a, #334155); color: white; border-radius: 24px; padding: 24px; text-align: center; margin-bottom: 24px; box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.4); }
         .net-worth-value { font-size: 2.5rem; font-weight: 800; margin: 10px 0; letter-spacing: -1px; }
-
-        /* ACCORDION */
-        .accordion-item {
-            background: white; border-radius: 16px; margin-bottom: 12px;
-            overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.03); border: 1px solid #e2e8f0;
-        }
-        .accordion-header {
-            width: 100%; display: flex; justify-content: space-between; align-items: center;
-            padding: 18px; background: white; border: none; cursor: pointer; text-align: left;
-        }
+        
+        .accordion-item { background: white; border-radius: 16px; margin-bottom: 12px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.03); border: 1px solid #e2e8f0; }
+        .accordion-header { width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 18px; background: white; border: none; cursor: pointer; text-align: left; }
         .acc-title { font-weight: 600; font-size: 1rem; display: flex; align-items: center; gap: 10px; }
         .acc-total { font-weight: 700; font-size: 0.95rem; color: var(--text-light); }
         .accordion-body { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; background: #f8fafc; }
         .input-wrapper { padding: 20px; border-top: 1px solid #f1f5f9; }
 
-        /* LOGO & ICONS */
+        /* LOGO & OTHERS */
         .logo-container { margin-bottom: 8px; display: flex; align-items: center; }
         .brand-logo { height: 35px; width: auto; max-width: 150px; object-fit: contain; display: block; }
         .logo-rumah { height: 40px; border-radius: 6px; }
         .logo-text { font-weight: 700; font-size: 1rem; margin-left: 12px; color: #334155; }
         .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
         .dot-green { background: #10b981; } .dot-blue { background: #3b82f6; } .dot-orange { background: #f59e0b; } .dot-dark { background: #334155; }
-
-        /* INPUTS & BUTTONS */
-        input {
-            width: 100%; padding: 14px; border: 1px solid #cbd5e1; border-radius: 12px;
-            font-size: 1rem; margin-bottom: 16px; background: white; outline: none;
-        }
-        .input-sm { margin-bottom: 5px; font-size: 0.9rem; padding: 10px; }
-        input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); }
         label { display: block; font-size: 0.85rem; font-weight: 600; color: var(--text-light); margin-bottom: 6px; }
-
-        .btn-primary {
-            width: 100%; background: var(--primary); color: white;
-            padding: 16px; border: none; border-radius: 12px;
-            font-weight: 600; font-size: 1rem; cursor: pointer; transition: 0.2s;
-        }
-        .btn-pnl { background: #334155; margin-top: 10px; }
-        .btn-update { background: #059669; }
-        .btn-hide-modal { background: #059669; margin-bottom: 15px; font-size: 0.9rem; padding: 12px; }
-        .btn-show-modal { background: #cbd5e1; color: #475569; margin-bottom: 15px; font-size: 0.8rem; padding: 8px; }
-
-        /* PNL & TABLES */
-        .pnl-box {
-            background: #fff; border: 1px solid #e2e8f0; border-radius: 8px;
-            padding: 10px; margin-bottom: 20px; display: none;
-        }
+        
+        .pnl-box { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px; margin-bottom: 20px; display: none; }
         .pnl-row { display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 5px; }
         .text-profit { color: var(--profit); font-weight: bold; }
         .text-loss { color: var(--loss); font-weight: bold; }
         .pnl-total-area { margin-top: 15px; padding-top: 10px; border-top: 2px dashed #e2e8f0; text-align: center; }
 
-        .btn-sm { padding: 6px 12px; border-radius: 8px; border: none; font-size: 0.75rem; cursor: pointer; margin-left: 5px; color: white; }
-        .btn-edit { background: #f59e0b; }
-        .btn-del { background: #ef4444; }
+        .btn-hide-modal { background: #059669; margin-bottom: 15px; font-size: 0.9rem; padding: 12px; }
+        .btn-show-modal { background: #cbd5e1; color: #475569; margin-bottom: 15px; font-size: 0.8rem; padding: 8px; }
+        .btn-pnl { background: #334155; margin-top: 10px; }
 
+        /* NAV */
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: white; display: grid; grid-template-columns: repeat(5, 1fr); padding: 10px 0; box-shadow: 0 -4px 20px rgba(0,0,0,0.05); z-index: 999; border-top-left-radius: 20px; border-top-right-radius: 20px; }
+        .nav-item { border: none; background: none; display: flex; flex-direction: column; align-items: center; font-size: 0.65rem; color: var(--text-light); cursor: pointer; transition: 0.2s; }
+        .nav-icon { font-size: 1.3rem; margin-bottom: 3px; }
+        .nav-item.active { color: var(--primary); font-weight: 700; }
+        
+        .status-bar { background: #fff; padding: 8px; text-align: center; font-size: 0.75rem; color: #64748b; border-bottom: 1px solid #e2e8f0; position: sticky; top: 0; z-index: 1000; }
+        
         .table-wrap { overflow-x: auto; margin-top: 10px; }
         table { width: 100%; border-collapse: collapse; min-width: 100%; }
         td { padding: 12px 8px; font-size: 0.9rem; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
+        .btn-sm { padding: 6px 12px; border-radius: 8px; border: none; font-size: 0.75rem; cursor: pointer; margin-left: 5px; color: white; }
+        .btn-edit { background: #f59e0b; } .btn-del { background: #ef4444; }
         .date-col { font-size: 0.75rem; color: #64748b; line-height: 1.2; }
-        .live-tag { background: #ef4444; color: white; font-size: 0.6rem; padding: 2px 6px; border-radius: 4px; margin-left: 5px; }
     </style>
 </head>
 <body>
@@ -169,7 +159,17 @@
     </div>
 
     <div id="tab-assets" class="container tab-content">
-        <h2 style="margin-top: 0;">Kelola Aset</h2>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <h2 style="margin: 0;">Kelola Aset</h2>
+            <div class="control-bar" style="margin-bottom: 0;">
+                <button id="btn-edit-assets" class="btn-action-sm btn-edit-mode" onclick="toggleEditMode('assets', true)">
+                    ✏️ Edit Data
+                </button>
+                <button id="btn-save-assets" class="btn-action-sm btn-save-mode" onclick="saveAndLock('assets')">
+                    ✔ Simpan & Kunci
+                </button>
+            </div>
+        </div>
 
         <div class="accordion-item">
             <button class="accordion-header" onclick="toggleAcc(this)">
@@ -179,22 +179,22 @@
             <div class="accordion-body">
                 <div class="input-wrapper">
                     <div class="logo-container"><img src="https://upload.wikimedia.org/wikipedia/commons/5/5c/Bank_Central_Asia.svg" class="brand-logo" alt="BCA"></div>
-                    <input type="number" id="in-bca" placeholder="0" oninput="saveData()">
+                    <input type="number" id="in-bca" class="locked-input assets-input" placeholder="0" disabled>
                     
                     <div class="logo-container"><img src="https://static.wikia.nocookie.net/logopedia/images/f/f7/Blu_by_BCA_Digital.svg/revision/latest/scale-to-width-down/250?cb=20210821144124" class="brand-logo" alt="Blu"></div>
-                    <input type="number" id="in-blu" placeholder="0" oninput="saveData()">
+                    <input type="number" id="in-blu" class="locked-input assets-input" placeholder="0" disabled>
 
                     <div class="logo-container"><img src="https://i.pinimg.com/736x/70/5c/21/705c215302c838ff757beffe34c99beb.jpg" class="brand-logo" alt="BNC"></div>
-                    <input type="number" id="in-neo" placeholder="0" oninput="saveData()">
+                    <input type="number" id="in-neo" class="locked-input assets-input" placeholder="0" disabled>
                     
                     <div class="logo-container"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkyLnNhTmU9Ae3mDAxPXY6t_4JoioxTpL7HA&s" class="brand-logo logo-rumah" alt="Rumah"><span class="logo-text">Tabungan Rumah</span></div>
-                    <input type="number" id="in-rumah" placeholder="0" oninput="saveData()">
+                    <input type="number" id="in-rumah" class="locked-input assets-input" placeholder="0" disabled>
                     
                     <div class="logo-container"><img src="https://upload.wikimedia.org/wikipedia/commons/f/fe/Shopee.svg" class="brand-logo" alt="Shopee"></div>
-                    <input type="number" id="in-shopee" placeholder="0" oninput="saveData()">
+                    <input type="number" id="in-shopee" class="locked-input assets-input" placeholder="0" disabled>
                     
                     <div class="logo-container"><img src="https://upload.wikimedia.org/wikipedia/commons/8/86/Gopay_logo.svg" class="brand-logo" alt="GoPay"></div>
-                    <input type="number" id="in-gopay" placeholder="0" oninput="saveData()">
+                    <input type="number" id="in-gopay" class="locked-input assets-input" placeholder="0" disabled>
                 </div>
             </div>
         </div>
@@ -207,9 +207,9 @@
             <div class="accordion-body">
                 <div class="input-wrapper">
                     <label>💵 Gaji Sesi 1</label>
-                    <input type="number" id="in-gaji1" placeholder="0" oninput="saveData()">
+                    <input type="number" id="in-gaji1" class="locked-input assets-input" placeholder="0" disabled>
                     <label>💵 Gaji Sesi 2</label>
-                    <input type="number" id="in-gaji2" placeholder="0" oninput="saveData()">
+                    <input type="number" id="in-gaji2" class="locked-input assets-input" placeholder="0" disabled>
                 </div>
             </div>
         </div>
@@ -251,10 +251,10 @@
                         <span style="font-weight:600; margin-left:10px;">Dompet Aldi</span>
                     </div>
                     <label>Jumlah Koin</label>
-                    <input type="number" class="input-sm" id="xrp-aldi" placeholder="0.00" step="any" oninput="saveData()">
+                    <input type="number" class="input-sm locked-input assets-input" id="xrp-aldi" placeholder="0.00" step="any" disabled>
                     <div class="buy-input-group">
                         <label>Harga Beli (Rata-rata/Koin)</label>
-                        <input type="number" class="input-sm" id="buy-aldi" placeholder="Rp 0" oninput="saveData()">
+                        <input type="number" class="input-sm locked-input assets-input" id="buy-aldi" placeholder="Rp 0" disabled>
                     </div>
                     <div id="pnl-res-aldi" class="pnl-box">
                         <div class="pnl-row"><span>Modal:</span> <span id="modal-aldi">Rp 0</span></div>
@@ -269,10 +269,10 @@
                         <span style="font-weight:600; margin-left:10px;">Dompet Susilowati</span>
                     </div>
                     <label>Jumlah Koin</label>
-                    <input type="number" class="input-sm" id="xrp-susi" placeholder="0.00" step="any" oninput="saveData()">
+                    <input type="number" class="input-sm locked-input assets-input" id="xrp-susi" placeholder="0.00" step="any" disabled>
                     <div class="buy-input-group">
                         <label>Harga Beli (Rata-rata/Koin)</label>
-                        <input type="number" class="input-sm" id="buy-susi" placeholder="Rp 0" oninput="saveData()">
+                        <input type="number" class="input-sm locked-input assets-input" id="buy-susi" placeholder="Rp 0" disabled>
                     </div>
                     <div id="pnl-res-susi" class="pnl-box">
                         <div class="pnl-row"><span>Modal:</span> <span id="modal-susi">Rp 0</span></div>
@@ -294,24 +294,26 @@
     </div>
 
     <div id="tab-fixed" class="container tab-content">
-        <h2 style="margin-top: 0; color: var(--fixed-exp);">Pengeluaran Tetap</h2>
-        <p style="font-size:0.9rem; color:var(--text-light);">
-            Daftar ini akan <b>langsung mengurangi</b> Total Kekayaan Bersih Anda.
-        </p>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <h2 style="margin: 0; color: var(--fixed-exp);">Pengeluaran Tetap</h2>
+            <div class="control-bar" style="margin-bottom: 0;">
+                <button id="btn-edit-fixed" class="btn-action-sm btn-edit-mode" onclick="toggleEditMode('fixed', true)">
+                    ✏️ Edit Data
+                </button>
+                <button id="btn-save-fixed" class="btn-action-sm btn-save-mode" onclick="saveAndLock('fixed')">
+                    ✔ Simpan & Kunci
+                </button>
+            </div>
+        </div>
+        <p style="font-size:0.9rem; color:var(--text-light);">Langsung mengurangi Total Kekayaan.</p>
 
         <div style="background: white; padding: 20px; border-radius: 16px; box-shadow: 0 4px 10px rgba(0,0,0,0.03);">
             <div class="input-wrapper" style="padding: 0; border: none;">
-                <label>👩 Ibuk</label>
-                <input type="number" id="in-fixed-ibuk" placeholder="0" oninput="saveData()">
-                <label>👨 Bapak</label>
-                <input type="number" id="in-fixed-bapak" placeholder="0" oninput="saveData()">
-                <label>🧒 Adik</label>
-                <input type="number" id="in-fixed-adik" placeholder="0" oninput="saveData()">
-                <label>📶 WiFi</label>
-                <input type="number" id="in-fixed-wifi" placeholder="0" oninput="saveData()">
-                <div style="margin-top: 15px; text-align: right; font-weight: bold; color: var(--fixed-exp);">
-                    Total Fixed: <span id="total-fixed-display">Rp 0</span>
-                </div>
+                <label>👩 Ibuk</label><input type="number" id="in-fixed-ibuk" class="locked-input fixed-input" placeholder="0" disabled>
+                <label>👨 Bapak</label><input type="number" id="in-fixed-bapak" class="locked-input fixed-input" placeholder="0" disabled>
+                <label>🧒 Adik</label><input type="number" id="in-fixed-adik" class="locked-input fixed-input" placeholder="0" disabled>
+                <label>📶 WiFi</label><input type="number" id="in-fixed-wifi" class="locked-input fixed-input" placeholder="0" disabled>
+                <div style="margin-top: 15px; text-align: right; font-weight: bold; color: var(--fixed-exp);">Total Fixed: <span id="total-fixed-display">Rp 0</span></div>
             </div>
         </div>
     </div>
@@ -320,54 +322,30 @@
         <h2 style="margin-top: 0;">Pengeluaran Harian</h2>
         <div style="background: white; padding: 20px; border-radius: 16px; box-shadow: 0 4px 10px rgba(0,0,0,0.03);">
             <form id="form-daily">
-                <label>Tanggal & Jam</label>
-                <input type="datetime-local" id="daily-date" required>
-                <label>Keperluan</label>
-                <input type="text" id="daily-desc" placeholder="Contoh: Bensin, Makan" required>
-                <label>Nominal (Rp)</label>
-                <input type="number" id="daily-amount" placeholder="0" required>
-                
+                <label>Tanggal & Jam</label><input type="datetime-local" id="daily-date" required>
+                <label>Keperluan</label><input type="text" id="daily-desc" placeholder="Contoh: Bensin, Makan" required>
+                <label>Nominal (Rp)</label><input type="number" id="daily-amount" placeholder="0" required>
                 <button type="submit" id="btn-daily-submit" class="btn-primary">Simpan Data</button>
                 <button type="button" id="btn-daily-cancel" class="btn-primary" style="background:#64748b; margin-top:10px; display:none;" onclick="cancelEdit()">Batal Edit</button>
             </form>
         </div>
         <h3 style="margin-top: 25px;">Riwayat Transaksi</h3>
-        <div class="table-wrap" style="background: white; border-radius: 16px; padding: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.03);">
-            <table id="table-daily"></table>
-        </div>
+        <div class="table-wrap" style="background: white; border-radius: 16px; padding: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.03);"><table id="table-daily"></table></div>
     </div>
 
     <div id="tab-monthly" class="container tab-content">
         <h2 style="margin-top: 0;">Laporan Bulanan</h2>
         <div style="background: white; border-radius: 16px; padding: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
-            <table>
-                <thead>
-                    <tr style="border-bottom: 2px solid #f1f5f9;">
-                        <th style="text-align:left; padding-bottom:10px; color:#64748b;">Bulan</th>
-                        <th style="text-align:right; padding-bottom:10px; color:#64748b;">Total Keluar</th>
-                    </tr>
-                </thead>
-                <tbody id="table-monthly"></tbody>
-            </table>
+            <table><thead><tr style="border-bottom: 2px solid #f1f5f9;"><th style="text-align:left; padding-bottom:10px; color:#64748b;">Bulan</th><th style="text-align:right; padding-bottom:10px; color:#64748b;">Total Keluar</th></tr></thead><tbody id="table-monthly"></tbody></table>
         </div>
     </div>
 
     <nav class="bottom-nav">
-        <button class="nav-item active" onclick="switchTab('home', this)">
-            <span class="nav-icon">🏠</span><span>Home</span>
-        </button>
-        <button class="nav-item" onclick="switchTab('assets', this)">
-            <span class="nav-icon">💰</span><span>Aset</span>
-        </button>
-        <button class="nav-item" onclick="switchTab('fixed', this)">
-            <span class="nav-icon">📉</span><span>Tetap</span>
-        </button>
-        <button class="nav-item" onclick="switchTab('daily', this)">
-            <span class="nav-icon">📝</span><span>Harian</span>
-        </button>
-        <button class="nav-item" onclick="switchTab('monthly', this)">
-            <span class="nav-icon">📊</span><span>Bulan</span>
-        </button>
+        <button class="nav-item active" onclick="switchTab('home', this)"><span class="nav-icon">🏠</span><span>Home</span></button>
+        <button class="nav-item" onclick="switchTab('assets', this)"><span class="nav-icon">💰</span><span>Aset</span></button>
+        <button class="nav-item" onclick="switchTab('fixed', this)"><span class="nav-icon">📉</span><span>Tetap</span></button>
+        <button class="nav-item" onclick="switchTab('daily', this)"><span class="nav-icon">📝</span><span>Harian</span></button>
+        <button class="nav-item" onclick="switchTab('monthly', this)"><span class="nav-icon">📊</span><span>Bulan</span></button>
     </nav>
 
 <script>
@@ -387,32 +365,24 @@
     };
     // ==========================================
 
-    // Initialize Firebase
-    if (!firebase.apps.length) {
-        firebase.initializeApp(firebaseConfig);
-    }
+    if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
     const db = firebase.database();
 
-    // Default Data
     let data = {
         inputs: { 
             bca:0, blu:0, neo:0, rumah:0, shopee:0, gopay:0, gaji1:0, gaji2:0, 
             xrp_aldi:0, xrp_susi:0, buy_aldi:0, buy_susi:0,
             fixed_ibuk: 0, fixed_bapak: 0, fixed_adik: 0, fixed_wifi: 0
         },
-        debts: [], 
-        expenses: [],
-        settings: { hideBuy: false }
+        debts: [], expenses: [], settings: { hideBuy: false }
     };
     let xrpPrice = 0;
     let editingId = null;
     let pnlVisible = false;
 
-    // --- MAIN FUNCTION ---
+    // --- INIT ---
     function init() {
         const statusEl = document.getElementById('sync-status');
-        
-        // SYNC REALTIME
         db.ref('financeData').on('value', (snapshot) => {
             const val = snapshot.val();
             if (val) {
@@ -420,30 +390,44 @@
                 data.settings = val.settings || data.settings;
                 data.debts = val.debts ? Object.values(val.debts) : [];
                 data.expenses = val.expenses ? Object.values(val.expenses) : [];
-
-                statusEl.innerText = "Data Sinkron (Online)";
-                statusEl.style.color = "#059669";
-                
-                populateInputs();
-                renderDebt();
-                renderDaily();
-                renderMonthly();
-                calcAll();
-                applyBuyVisibility();
-            } else {
-                statusEl.innerText = "Data Baru (Belum ada data di server)";
-            }
-        }, (error) => {
-            statusEl.innerText = "Error Koneksi: " + error.message;
-            statusEl.style.color = "red";
+                statusEl.innerText = "Data Sinkron (Online)"; statusEl.style.color = "#059669";
+                populateInputs(); renderDebt(); renderDaily(); renderMonthly(); calcAll(); applyBuyVisibility();
+            } else { statusEl.innerText = "Menunggu data..."; }
         });
-
         resetDailyForm();
         fetchXRP();
         setInterval(fetchXRP, 30000);
     }
 
-    // --- POPULATE INPUTS ---
+    // --- LOCK & UNLOCK LOGIC (NEW) ---
+    function toggleEditMode(section, isEditing) {
+        // Section: 'assets' or 'fixed'
+        const inputs = document.querySelectorAll(`.${section}-input`);
+        const btnEdit = document.getElementById(`btn-edit-${section}`);
+        const btnSave = document.getElementById(`btn-save-${section}`);
+
+        if (isEditing) {
+            // UNLOCK
+            inputs.forEach(el => el.disabled = false);
+            btnEdit.style.display = 'none';
+            btnSave.style.display = 'flex';
+            inputs[0].focus(); // Focus ke input pertama
+        } else {
+            // LOCK
+            inputs.forEach(el => el.disabled = true);
+            btnEdit.style.display = 'flex';
+            btnSave.style.display = 'none';
+        }
+    }
+
+    function saveAndLock(section) {
+        if(confirm("Simpan perubahan data?")) {
+            saveData(); // Simpan ke Firebase
+            toggleEditMode(section, false); // Kunci kembali
+        }
+    }
+
+    // --- POPULATE ---
     function populateInputs() {
         Object.keys(data.inputs).forEach(key => {
             let id = 'in-' + key;
@@ -463,7 +447,6 @@
             if(k.includes('fixed')) id = 'in-' + k.replace('_', '-');
             data.inputs[k] = parseFloat(document.getElementById(id).value) || 0;
         });
-
         pushToFirebase();
         if(pnlVisible) calcPnL();
     }
@@ -482,7 +465,6 @@
         const totalXrpIDR = (i.xrp_aldi + i.xrp_susi) * xrpPrice;
         const totalFixed = i.fixed_ibuk + i.fixed_bapak + i.fixed_adik + i.fixed_wifi;
         const totalExpDaily = data.expenses.reduce((a,b) => a + b.amount, 0);
-
         const netWorth = (totalCash + totalGaji + totalDebt + totalXrpIDR) - totalFixed;
 
         document.getElementById('head-cash').innerText = formatRupiah(totalCash);
@@ -498,11 +480,8 @@
         document.getElementById('total-fixed-display').innerText = formatRupiah(totalFixed);
     }
 
-    // --- UTILS ---
-    function toggleBuyInputs() {
-        data.settings.hideBuy = !data.settings.hideBuy; 
-        pushToFirebase();
-    }
+    // --- OTHERS ---
+    function toggleBuyInputs() { data.settings.hideBuy = !data.settings.hideBuy; pushToFirebase(); }
     function applyBuyVisibility() {
         const els = document.querySelectorAll('.buy-input-group');
         const btn = document.getElementById('btn-toggle-modal');
@@ -566,12 +545,7 @@
             document.getElementById('form-daily').scrollIntoView({ behavior: 'smooth' });
         }
     }
-    function cancelEdit() { 
-        resetDailyForm(); 
-        const btn = document.getElementById('btn-daily-submit');
-        btn.innerText = "Simpan Data"; btn.classList.remove('btn-update');
-        document.getElementById('btn-daily-cancel').style.display = 'none';
-    }
+    function cancelEdit() { resetDailyForm(); const btn = document.getElementById('btn-daily-submit'); btn.innerText = "Simpan Data"; btn.classList.remove('btn-update'); document.getElementById('btn-daily-cancel').style.display = 'none'; }
     function resetDailyForm() {
         const now = new Date();
         now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
@@ -580,8 +554,6 @@
         document.getElementById('daily-amount').value = '';
         editingId = null;
     }
-
-    // Monthly
     function renderMonthly() {
         const monthlyData = {};
         data.expenses.forEach(e => {
@@ -593,7 +565,6 @@
         if(keys.length === 0) { t.innerHTML = '<tr><td colspan="2" style="text-align:center;">Belum ada data.</td></tr>'; return; }
         keys.forEach(k => t.innerHTML += `<tr><td style="font-weight:600; color:#334155;">${k}</td><td style="text-align:right; font-weight:bold; color:#ef4444;">${formatRupiah(monthlyData[k])}</td></tr>`);
     }
-
     function toggleAcc(btn) { btn.classList.toggle("active"); const panel = btn.nextElementSibling; panel.style.maxHeight = panel.style.maxHeight ? null : panel.scrollHeight + "px"; }
     function togglePnL() { pnlVisible = !pnlVisible; const boxes = document.querySelectorAll('.pnl-box'); boxes.forEach(b => b.style.display = pnlVisible ? 'block' : 'none'); if(pnlVisible) { calcPnL(); const accBody = document.querySelector('#head-xrp').parentElement.nextElementSibling; accBody.style.maxHeight = accBody.scrollHeight + "px"; } }
     function calcPnL() {
