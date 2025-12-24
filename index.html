@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Keuangan Pro V23 (Auto Sync)</title>
+    <title>Keuangan Pro V24 (Stable Sync)</title>
     
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
@@ -26,7 +26,7 @@
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { font-family: 'Inter', sans-serif; background-color: var(--bg-app); margin: 0; padding: 0; color: var(--text-dark); padding-bottom: 100px; }
 
-        /* LAYOUT & GRID */
+        /* LAYOUT */
         .container { max-width: 100%; padding: 20px 16px; margin: 0 auto; }
         @media (min-width: 768px) {
             .container { max-width: 1200px; padding: 40px; }
@@ -43,7 +43,7 @@
         .net-worth-value { font-size: 3rem; font-weight: 800; margin: 10px 0; letter-spacing: -1.5px; }
         .stat-card { background: white; padding: 20px; border-radius: 16px; border: 1px solid #e2e8f0; box-shadow: var(--card-shadow); }
 
-        /* ASSET LIST */
+        /* LIST & INPUTS */
         .asset-list-container { background: white; border-radius: 16px; box-shadow: var(--card-shadow); border: 1px solid #e2e8f0; overflow: hidden; }
         .asset-row { display: flex; align-items: center; justify-content: space-between; padding: 15px 20px; border-bottom: 1px solid #f1f5f9; }
         .asset-row:last-child { border-bottom: none; }
@@ -51,59 +51,69 @@
         .asset-logo { width: 32px; height: 32px; object-fit: contain; }
         .asset-name { font-weight: 600; font-size: 0.95rem; color: #334155; }
         
-        /* INPUT FIELDS (AUTO SAVE STYLE) */
+        /* INPUT LOCKED STYLE */
         .asset-input { 
             text-align: right; font-weight: 700; font-size: 1rem; color: var(--text-dark); 
             border: 1px solid transparent; background: transparent; width: 140px; padding: 8px; outline: none; border-radius: 8px;
             transition: all 0.2s;
         }
-        .asset-input:focus { background: #f0f9ff; border-color: var(--primary); color: var(--primary); }
-        .asset-input:placeholder-shown { font-weight: 400; }
+        .asset-input:disabled { 
+            background-color: #f1f5f9; 
+            color: #94a3b8; 
+            cursor: not-allowed; 
+        }
+        .asset-input:not(:disabled):focus {
+            background: #fff;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
 
-        /* TRANSACTION TABLE (CLEAN) */
+        /* CONTROL BAR (EDIT/SAVE) */
+        .control-bar { display: flex; justify-content: flex-end; margin-bottom: 10px; gap: 8px; }
+        .btn-action-sm { padding: 8px 16px; border-radius: 8px; font-size: 0.85rem; font-weight: 600; border: none; cursor: pointer; display: flex; align-items: center; gap: 5px; transition: 0.2s; }
+        .btn-action-sm:active { transform: scale(0.95); }
+        .btn-edit-mode { background: #3b82f6; color: white; }
+        .btn-save-mode { background: var(--success); color: white; display: none; }
+
+        /* TRANSACTION TABLE */
         .transaction-table { width: 100%; border-collapse: separate; border-spacing: 0; }
         .transaction-table td { padding: 16px 12px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
-        .transaction-table tr:last-child td { border-bottom: none; }
         .col-desc { width: 50%; }
         .t-desc { font-weight: 600; color: var(--text-dark); margin-bottom: 4px; display: block;}
         .t-date { font-size: 0.75rem; color: var(--text-light); }
         .col-amount { width: 30%; text-align: right; font-weight: 700; color: var(--loss); font-size: 0.95rem; }
         .col-action { width: 20%; text-align: right; white-space: nowrap; }
-        .btn-icon-action { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 50%; border: none; cursor: pointer; margin-left: 6px; transition: all 0.2s; }
+        .btn-icon-action { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 50%; border: none; cursor: pointer; margin-left: 6px; }
         .btn-icon-edit-row { background-color: #eff6ff; color: #3b82f6; }
         .btn-icon-del-row { background-color: #fef2f2; color: #ef4444; }
         .btn-icon-action svg { width: 18px; height: 18px; stroke-width: 2.5; }
 
-        /* GENERAL UI */
+        /* GENERAL */
         .btn-hide-modal { background: #059669; margin-bottom: 15px; font-size: 0.9rem; padding: 12px; }
         .btn-show-modal { background: #cbd5e1; color: #475569; margin-bottom: 15px; font-size: 0.8rem; padding: 8px; }
         .btn-primary { width: 100%; background: var(--primary); color: white; padding: 16px; border: none; border-radius: 12px; font-weight: 600; cursor: pointer; }
         .form-control { width: 100%; padding: 14px; border: 1px solid #cbd5e1; border-radius: 12px; font-size: 1rem; margin-bottom: 16px; background: white; outline: none; }
         
-        /* ACCORDION */
         .accordion-item { background: white; border-radius: 16px; margin-bottom: 12px; overflow: hidden; border: 1px solid #e2e8f0; box-shadow: var(--card-shadow); }
         .accordion-header { width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 18px; background: white; border: none; cursor: pointer; }
         .acc-title { font-weight: 600; }
         .accordion-body { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; background: #f8fafc; }
         .input-wrapper { padding: 20px; border-top: 1px solid #f1f5f9; }
         
-        /* PNL */
         .pnl-box { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 15px; margin-bottom: 20px; display: none; }
         .pnl-row { display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 8px; }
         .text-profit { color: var(--profit); font-weight: 800; }
         .text-loss { color: var(--loss); font-weight: 800; }
         .text-neutral { color: var(--text-light); font-weight: 600; }
 
-        /* NAV & STATUS */
+        .tab-content { display: none; animation: fadeEffect 0.3s; }
+        .tab-content.active { display: block; }
+        @keyframes fadeEffect { from {opacity: 0; transform: translateY(10px);} to {opacity: 1; transform: translateY(0);} }
         .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: white; display: grid; grid-template-columns: repeat(5, 1fr); padding: 10px 0; box-shadow: 0 -4px 20px rgba(0,0,0,0.05); z-index: 999; border-top: 1px solid #e2e8f0; }
         .nav-item { border: none; background: none; display: flex; flex-direction: column; align-items: center; font-size: 0.65rem; color: var(--text-light); cursor: pointer; transition: 0.2s; }
         .nav-item.active { color: var(--primary); font-weight: 700; transform: translateY(-2px); }
         .nav-icon { font-size: 1.3rem; margin-bottom: 3px; }
-        .status-bar { background: #fff; padding: 8px; text-align: center; font-size: 0.75rem; color: #64748b; border-bottom: 1px solid #e2e8f0; position: sticky; top: 0; z-index: 1000; }
-        
-        .tab-content { display: none; animation: fadeEffect 0.3s; }
-        .tab-content.active { display: block; }
-        @keyframes fadeEffect { from {opacity: 0; transform: translateY(10px);} to {opacity: 1; transform: translateY(0);} }
+        .status-bar { background: #fff; padding: 8px; text-align: center; font-size: 0.75rem; color: #64748b; border-bottom: 1px solid #e2e8f0; }
         .table-wrap { overflow-x: auto; margin-top: 10px; }
         table { width: 100%; border-collapse: collapse; min-width: 100%; }
     </style>
@@ -145,28 +155,31 @@
     </div>
 
     <div id="tab-assets" class="container tab-content">
-        <h2 style="margin: 0 0 20px 0; font-size: 1.5rem;">Aset & Tabungan</h2>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h2 style="margin: 0; font-size: 1.5rem;">Aset & Tabungan</h2>
+            <div class="control-bar" style="margin-bottom: 0;">
+                <button id="btn-edit-assets" class="btn-action-sm btn-edit-mode" onclick="toggleEditMode('assets', true)">✏️ Edit</button>
+                <button id="btn-save-assets" class="btn-action-sm btn-save-mode" onclick="saveAndLock('assets')">✔ Simpan</button>
+            </div>
+        </div>
 
         <div class="assets-grid">
             <div>
                 <h4 style="margin: 0 0 10px 5px; color: var(--text-light); font-size: 0.9rem; text-transform: uppercase;">Rekening & E-Wallet</h4>
                 <div class="asset-list-container">
-                    <div class="asset-row">
-                        <div class="asset-info"><img src="https://cdn-icons-png.flaticon.com/512/2331/2331941.png" class="asset-logo" alt="Cash"><span class="asset-name">Uang Tunai (Dompet)</span></div>
-                        <input type="number" id="in-cash-wallet" class="asset-input" placeholder="0" oninput="saveData()">
-                    </div>
-                    <div class="asset-row"><div class="asset-info"><img src="https://upload.wikimedia.org/wikipedia/commons/5/5c/Bank_Central_Asia.svg" class="asset-logo"><span class="asset-name">Bank BCA</span></div><input type="number" id="in-bca" class="asset-input" placeholder="0" oninput="saveData()"></div>
-                    <div class="asset-row"><div class="asset-info"><img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEif0vt8YuRIv8NL29pArzsxq9lLkFCwLKZwrNx4flOTW13MUORiMkdMqFB8REjOjQLpcTEPUSu0yHLj6j1dGUVYHsf9FwcakDUhoPnRBvADwdAyka28fwrXpzZ-tpHQnfLVOarAbfYA0Ev0bOOv56NnhFnN0NSE9x2_wFiaQkqS9OR5r-lDGIKG5e5Z/s400/GKL38_logo%20blu%20-%20Koleksilogo.com.jpg" class="asset-logo" style="border-radius:50%;"><span class="asset-name">Blu BCA</span></div><input type="number" id="in-blu" class="asset-input" placeholder="0" oninput="saveData()"></div>
-                    <div class="asset-row"><div class="asset-info"><img src="https://i.pinimg.com/736x/70/5c/21/705c215302c838ff757beffe34c99beb.jpg" class="asset-logo" style="border-radius:50%;"><span class="asset-name">Bank Neo</span></div><input type="number" id="in-neo" class="asset-input" placeholder="0" oninput="saveData()"></div>
-                    <div class="asset-row"><div class="asset-info"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkyLnNhTmU9Ae3mDAxPXY6t_4JoioxTpL7HA&s" class="asset-logo" style="border-radius:4px;"><span class="asset-name">Tabungan Rumah</span></div><input type="number" id="in-rumah" class="asset-input" placeholder="0" oninput="saveData()"></div>
-                    <div class="asset-row"><div class="asset-info"><img src="https://upload.wikimedia.org/wikipedia/commons/f/fe/Shopee.svg" class="asset-logo"><span class="asset-name">ShopeePay</span></div><input type="number" id="in-shopee" class="asset-input" placeholder="0" oninput="saveData()"></div>
-                    <div class="asset-row"><div class="asset-info"><img src="https://upload.wikimedia.org/wikipedia/commons/8/86/Gopay_logo.svg" class="asset-logo"><span class="asset-name">GoPay</span></div><input type="number" id="in-gopay" class="asset-input" placeholder="0" oninput="saveData()"></div>
+                    <div class="asset-row"><div class="asset-info"><img src="https://cdn-icons-png.flaticon.com/512/2331/2331941.png" class="asset-logo" alt="Cash"><span class="asset-name">Uang Tunai (Dompet)</span></div><input type="number" id="in-cash-wallet" class="asset-input locked-input assets-input" placeholder="0" disabled></div>
+                    <div class="asset-row"><div class="asset-info"><img src="https://upload.wikimedia.org/wikipedia/commons/5/5c/Bank_Central_Asia.svg" class="asset-logo"><span class="asset-name">Bank BCA</span></div><input type="number" id="in-bca" class="asset-input locked-input assets-input" placeholder="0" disabled></div>
+                    <div class="asset-row"><div class="asset-info"><img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEif0vt8YuRIv8NL29pArzsxq9lLkFCwLKZwrNx4flOTW13MUORiMkdMqFB8REjOjQLpcTEPUSu0yHLj6j1dGUVYHsf9FwcakDUhoPnRBvADwdAyka28fwrXpzZ-tpHQnfLVOarAbfYA0Ev0bOOv56NnhFnN0NSE9x2_wFiaQkqS9OR5r-lDGIKG5e5Z/s400/GKL38_logo%20blu%20-%20Koleksilogo.com.jpg" class="asset-logo" style="border-radius:50%;"><span class="asset-name">Blu BCA</span></div><input type="number" id="in-blu" class="asset-input locked-input assets-input" placeholder="0" disabled></div>
+                    <div class="asset-row"><div class="asset-info"><img src="https://i.pinimg.com/736x/70/5c/21/705c215302c838ff757beffe34c99beb.jpg" class="asset-logo" style="border-radius:50%;"><span class="asset-name">Bank Neo</span></div><input type="number" id="in-neo" class="asset-input locked-input assets-input" placeholder="0" disabled></div>
+                    <div class="asset-row"><div class="asset-info"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkyLnNhTmU9Ae3mDAxPXY6t_4JoioxTpL7HA&s" class="asset-logo" style="border-radius:4px;"><span class="asset-name">Tabungan Rumah</span></div><input type="number" id="in-rumah" class="asset-input locked-input assets-input" placeholder="0" disabled></div>
+                    <div class="asset-row"><div class="asset-info"><img src="https://upload.wikimedia.org/wikipedia/commons/f/fe/Shopee.svg" class="asset-logo"><span class="asset-name">ShopeePay</span></div><input type="number" id="in-shopee" class="asset-input locked-input assets-input" placeholder="0" disabled></div>
+                    <div class="asset-row"><div class="asset-info"><img src="https://upload.wikimedia.org/wikipedia/commons/8/86/Gopay_logo.svg" class="asset-logo"><span class="asset-name">GoPay</span></div><input type="number" id="in-gopay" class="asset-input locked-input assets-input" placeholder="0" disabled></div>
                 </div>
 
                 <h4 style="margin: 20px 0 10px 5px; color: var(--text-light); font-size: 0.9rem; text-transform: uppercase;">Pemasukan Gaji</h4>
                 <div class="asset-list-container">
-                    <div class="asset-row"><div class="asset-info"><span style="font-size:1.2rem;">💵</span><span class="asset-name">Gaji Sesi 1</span></div><input type="number" id="in-gaji1" class="asset-input" placeholder="0" oninput="saveData()"></div>
-                    <div class="asset-row"><div class="asset-info"><span style="font-size:1.2rem;">💵</span><span class="asset-name">Gaji Sesi 2</span></div><input type="number" id="in-gaji2" class="asset-input" placeholder="0" oninput="saveData()"></div>
+                    <div class="asset-row"><div class="asset-info"><span style="font-size:1.2rem;">💵</span><span class="asset-name">Gaji Sesi 1</span></div><input type="number" id="in-gaji1" class="asset-input locked-input assets-input" placeholder="0" disabled></div>
+                    <div class="asset-row"><div class="asset-info"><span style="font-size:1.2rem;">💵</span><span class="asset-name">Gaji Sesi 2</span></div><input type="number" id="in-gaji2" class="asset-input locked-input assets-input" placeholder="0" disabled></div>
                 </div>
             </div>
 
@@ -176,17 +189,23 @@
                     <div class="accordion-body">
                         <div class="input-wrapper">
                             <div style="text-align: center; margin-bottom: 15px; font-size: 0.9rem;">Harga Live: <span id="xrp-live-price" style="font-weight: 800;">Loading...</span></div>
+                            
+                            <div class="control-bar" style="margin-bottom: 10px;">
+                                <button id="btn-edit-xrp" class="btn-action-sm btn-edit-mode" onclick="toggleEditMode('xrp', true)">✏️ Edit</button>
+                                <button id="btn-save-xrp" class="btn-action-sm btn-save-mode" onclick="saveAndLock('xrp')">✔ Simpan</button>
+                            </div>
+
                             <button id="btn-toggle-modal" class="btn-primary btn-hide-modal" onclick="toggleBuyInputs()">Simpan & Sembunyikan Modal</button>
                             <div style="background: #f8fafc; padding: 10px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 15px;">
                                 <div style="display:flex; align-items:center; margin-bottom:8px;"><img src="https://cdn.worldvectorlogo.com/logos/xrp-symbol-black.svg" style="height:20px; margin-right:8px;"><strong>Dompet Aldi</strong></div>
-                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;"><label style="margin:0;">Jml Koin:</label><input type="number" class="asset-input" id="xrp-aldi" placeholder="0.00" step="any" oninput="saveData()" style="width: 100px; border-bottom: 1px dashed #ccc;"></div>
-                                <div class="buy-input-group" style="display: flex; justify-content: space-between; align-items: center;"><label style="margin:0;">Modal/Koin:</label><input type="number" class="asset-input" id="buy-aldi" placeholder="Rp 0" oninput="saveData()" style="width: 100px; border-bottom: 1px dashed #ccc;"></div>
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;"><label style="margin:0;">Jml Koin:</label><input type="number" class="asset-input locked-input xrp-input" id="xrp-aldi" placeholder="0.00" step="any" disabled style="width: 100px; border-bottom: 1px dashed #ccc;"></div>
+                                <div class="buy-input-group" style="display: flex; justify-content: space-between; align-items: center;"><label style="margin:0;">Modal/Koin:</label><input type="number" class="asset-input locked-input xrp-input" id="buy-aldi" placeholder="Rp 0" disabled style="width: 100px; border-bottom: 1px dashed #ccc;"></div>
                                 <div id="pnl-res-aldi" class="pnl-box" style="margin-top: 10px; font-size: 0.85rem;"><div class="pnl-row"><span>Untung/Rugi:</span> <span id="stat-aldi" class="text-neutral">Rp 0</span></div></div>
                             </div>
                             <div style="background: #f8fafc; padding: 10px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 15px;">
                                 <div style="display:flex; align-items:center; margin-bottom:8px;"><img src="https://cdn.worldvectorlogo.com/logos/xrp-symbol-black.svg" style="height:20px; margin-right:8px;"><strong>Dompet Susilowati</strong></div>
-                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;"><label style="margin:0;">Jml Koin:</label><input type="number" class="asset-input" id="xrp-susi" placeholder="0.00" step="any" oninput="saveData()" style="width: 100px; border-bottom: 1px dashed #ccc;"></div>
-                                <div class="buy-input-group" style="display: flex; justify-content: space-between; align-items: center;"><label style="margin:0;">Modal/Koin:</label><input type="number" class="asset-input" id="buy-susi" placeholder="Rp 0" oninput="saveData()" style="width: 100px; border-bottom: 1px dashed #ccc;"></div>
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;"><label style="margin:0;">Jml Koin:</label><input type="number" class="asset-input locked-input xrp-input" id="xrp-susi" placeholder="0.00" step="any" disabled style="width: 100px; border-bottom: 1px dashed #ccc;"></div>
+                                <div class="buy-input-group" style="display: flex; justify-content: space-between; align-items: center;"><label style="margin:0;">Modal/Koin:</label><input type="number" class="asset-input locked-input xrp-input" id="buy-susi" placeholder="Rp 0" disabled style="width: 100px; border-bottom: 1px dashed #ccc;"></div>
                                 <div id="pnl-res-susi" class="pnl-box" style="margin-top: 10px; font-size: 0.85rem;"><div class="pnl-row"><span>Untung/Rugi:</span> <span id="stat-susi" class="text-neutral">Rp 0</span></div></div>
                             </div>
                             <button class="btn-primary btn-pnl" onclick="togglePnL()">Lihat Untung / Rugi</button>
@@ -212,14 +231,20 @@
     </div>
 
     <div id="tab-fixed" class="container tab-content">
-        <h2 style="margin: 0 0 10px 0; color: var(--fixed-exp);">Pengeluaran Tetap</h2>
-        <p style="font-size:0.9rem; color:var(--text-light); margin-bottom: 20px;">Langsung <b>MENGURANGI</b> Total Kekayaan.</p>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h2 style="margin: 0; color: var(--fixed-exp);">Pengeluaran Tetap</h2>
+            <div class="control-bar" style="margin-bottom: 0;">
+                <button id="btn-edit-fixed" class="btn-action-sm btn-edit-mode" onclick="toggleEditMode('fixed', true)">✏️ Edit</button>
+                <button id="btn-save-fixed" class="btn-action-sm btn-save-mode" onclick="saveAndLock('fixed')">✔ Simpan</button>
+            </div>
+        </div>
+        <p style="font-size:0.9rem; color:var(--text-light);">Langsung <b>MENGURANGI</b> Total Kekayaan.</p>
 
         <div class="asset-list-container">
-            <div class="asset-row"><div class="asset-info"><span class="asset-name">👩 Ibuk</span></div><input type="number" id="in-fixed-ibuk" class="asset-input" placeholder="0" oninput="saveData()"></div>
-            <div class="asset-row"><div class="asset-info"><span class="asset-name">👨 Bapak</span></div><input type="number" id="in-fixed-bapak" class="asset-input" placeholder="0" oninput="saveData()"></div>
-            <div class="asset-row"><div class="asset-info"><span class="asset-name">🧒 Adik</span></div><input type="number" id="in-fixed-adik" class="asset-input" placeholder="0" oninput="saveData()"></div>
-            <div class="asset-row"><div class="asset-info"><span class="asset-name">📶 WiFi</span></div><input type="number" id="in-fixed-wifi" class="asset-input" placeholder="0" oninput="saveData()"></div>
+            <div class="asset-row"><div class="asset-info"><span class="asset-name">👩 Ibuk</span></div><input type="number" id="in-fixed-ibuk" class="asset-input locked-input fixed-input" placeholder="0" disabled></div>
+            <div class="asset-row"><div class="asset-info"><span class="asset-name">👨 Bapak</span></div><input type="number" id="in-fixed-bapak" class="asset-input locked-input fixed-input" placeholder="0" disabled></div>
+            <div class="asset-row"><div class="asset-info"><span class="asset-name">🧒 Adik</span></div><input type="number" id="in-fixed-adik" class="asset-input locked-input fixed-input" placeholder="0" disabled></div>
+            <div class="asset-row"><div class="asset-info"><span class="asset-name">📶 WiFi</span></div><input type="number" id="in-fixed-wifi" class="asset-input locked-input fixed-input" placeholder="0" disabled></div>
             <div style="padding: 15px 20px; text-align: right; background: #fdf4ff;">
                 <span style="font-size: 0.9rem; color: var(--loss); font-weight: bold;">Total Pengurang: <span id="total-fixed-display">Rp 0</span></span>
             </div>
@@ -298,23 +323,10 @@
                 data.debts = val.debts ? Object.values(val.debts) : [];
                 data.expenses = val.expenses ? Object.values(val.expenses) : [];
                 statusEl.innerText = "Data Sinkron (Online)"; statusEl.style.color = "#059669";
-                
-                // Populate Inputs (Skip if element is focused to prevent cursor jump)
-                const activeId = document.activeElement.id;
-                Object.keys(data.inputs).forEach(key => {
-                    let id = 'in-' + key;
-                    if(key.includes('xrp') || key.includes('buy')) id = key;
-                    if(key.includes('fixed')) id = 'in-' + key.replace('_', '-');
-                    
-                    const el = document.getElementById(id);
-                    if (el && el.id !== activeId) {
-                        el.value = data.inputs[key] === 0 ? '' : data.inputs[key];
-                    }
-                });
-
+                populateInputs(); 
                 renderDebt(); renderDaily(); renderMonthly(); 
                 calcAll(); applyBuyVisibility();
-                updateLiveFixed();
+                updateLiveFixedDisplay();
             } else { statusEl.innerText = "Menunggu data..."; }
         });
         resetDailyForm();
@@ -322,35 +334,91 @@
         setInterval(fetchXRP, 30000);
     }
 
+    // --- HELPER VALUE ---
     function getVal(id) { return parseFloat(document.getElementById(id).value) || 0; }
 
-    // AUTO SAVE FUNCTION
-    function saveData() {
-        const inputKeys = ['bca','blu','neo','rumah','shopee','gopay','gaji1','gaji2','xrp_aldi','xrp_susi', 'buy_aldi', 'buy_susi', 'fixed_ibuk', 'fixed_bapak', 'fixed_adik', 'fixed_wifi', 'cash_wallet'];
-        inputKeys.forEach(k => {
-            let id = 'in-' + k;
-            if(k.includes('xrp') || k.includes('buy')) id = k;
-            if(k.includes('fixed')) id = 'in-' + k.replace('_', '-');
-            data.inputs[k] = getVal(id);
+    // --- LOCK & EDIT LOGIC ---
+    function toggleEditMode(section, isEditing) {
+        const inputs = document.querySelectorAll(`.${section}-input`);
+        const btnEdit = document.getElementById(`btn-edit-${section}`);
+        const btnSave = document.getElementById(`btn-save-${section}`);
+        
+        if (isEditing) {
+            inputs.forEach(el => el.disabled = false);
+            btnEdit.style.display = 'none'; btnSave.style.display = 'flex';
+            if(inputs.length > 0) inputs[0].focus();
+        } else {
+            inputs.forEach(el => el.disabled = true);
+            btnEdit.style.display = 'flex'; btnSave.style.display = 'none';
+        }
+    }
+
+    // --- SAFE SAVE LOGIC (PREVENTS RESET TO 0) ---
+    function saveAndLock(section) {
+        if(confirm("Simpan perubahan data?")) {
+            // Update ONLY the specific section's data in local object from DOM
+            if (section === 'assets') {
+                const keys = ['cash_wallet', 'bca', 'blu', 'neo', 'rumah', 'shopee', 'gopay', 'gaji1', 'gaji2'];
+                keys.forEach(k => {
+                    let id = 'in-' + k.replace('_', '-'); // handle cash_wallet -> in-cash-wallet
+                    data.inputs[k] = getVal(id);
+                });
+            } else if (section === 'fixed') {
+                const keys = ['fixed_ibuk', 'fixed_bapak', 'fixed_adik', 'fixed_wifi'];
+                keys.forEach(k => {
+                    let id = 'in-' + k.replace('_', '-');
+                    data.inputs[k] = getVal(id);
+                });
+            } else if (section === 'xrp') {
+                const keys = ['xrp_aldi', 'xrp_susi', 'buy_aldi', 'buy_susi'];
+                keys.forEach(k => {
+                    let id = k.replace('_', '-'); // handle xrp_aldi -> xrp-aldi
+                    data.inputs[k] = getVal(id);
+                });
+            }
+
+            // Send updated object to Firebase
+            db.ref('financeData').set(data);
+            
+            toggleEditMode(section, false);
+            calcAll(); // Refresh UI
+        }
+    }
+
+    function populateInputs() {
+        // Only update inputs if they are NOT being edited (active element check)
+        const activeId = document.activeElement.id;
+        
+        Object.keys(data.inputs).forEach(key => {
+            let id = 'in-' + key;
+            if(key.includes('xrp') || key.includes('buy')) id = key.replace('_', '-');
+            if(key.includes('fixed')) id = 'in-' + key.replace('_', '-');
+            if(key === 'cash_wallet') id = 'in-cash-wallet';
+
+            const el = document.getElementById(id);
+            if(el && el.id !== activeId) {
+                el.value = data.inputs[key] === 0 ? '' : data.inputs[key];
+            }
         });
-        
-        // Push to Firebase instantly
-        db.ref('financeData').set(data);
-        
-        // Update Local UI instantly
-        calcAll();
-        updateLiveFixed();
-        if(pnlVisible) calcPnL();
+    }
+
+    function updateLiveFixedDisplay() {
+        // Read directly from data object for stability in display
+        const i = data.inputs;
+        const total = (i.fixed_ibuk||0) + (i.fixed_bapak||0) + (i.fixed_adik||0) + (i.fixed_wifi||0);
+        document.getElementById('total-fixed-display').innerText = formatRupiah(total);
     }
 
     function calcAll() {
-        const totalCash = getVal('in-cash-wallet') + getVal('in-bca') + getVal('in-blu') + getVal('in-neo') + getVal('in-rumah') + getVal('in-shopee') + getVal('in-gopay');
-        const totalGaji = getVal('in-gaji1') + getVal('in-gaji2');
+        const i = data.inputs;
+        
+        const totalCash = (i.cash_wallet||0) + i.bca + i.blu + i.neo + i.rumah + i.shopee + i.gopay;
+        const totalGaji = i.gaji1 + i.gaji2;
         const totalDebt = data.debts.reduce((a,b) => a + b.amount, 0);
-        const xrpAldiCount = getVal('xrp-aldi');
-        const xrpSusiCount = getVal('xrp-susi');
-        const totalXrpIDR = (xrpAldiCount + xrpSusiCount) * xrpPrice;
-        const totalFixed = getVal('in-fixed-ibuk') + getVal('in-fixed-bapak') + getVal('in-fixed-adik') + getVal('in-fixed-wifi');
+        
+        const totalXrpIDR = (i.xrp_aldi + i.xrp_susi) * xrpPrice;
+        
+        const totalFixed = (i.fixed_ibuk||0) + (i.fixed_bapak||0) + (i.fixed_adik||0) + (i.fixed_wifi||0);
         const totalExpDaily = data.expenses.reduce((a,b) => a + b.amount, 0);
         
         const netWorth = (totalCash + totalGaji + totalDebt + totalXrpIDR) - totalFixed;
@@ -367,11 +435,6 @@
         document.getElementById('head-xrp').innerText = formatRupiah(totalXrpIDR);
     }
 
-    function updateLiveFixed() {
-        const total = getVal('in-fixed-ibuk') + getVal('in-fixed-bapak') + getVal('in-fixed-adik') + getVal('in-fixed-wifi');
-        document.getElementById('total-fixed-display').innerText = formatRupiah(total);
-    }
-
     function toggleBuyInputs() { data.settings.hideBuy = !data.settings.hideBuy; db.ref('financeData').set(data); }
     function applyBuyVisibility() {
         const els = document.querySelectorAll('.buy-input-group');
@@ -385,37 +448,21 @@
         }
     }
     
+    // DEBT
     document.getElementById('form-debt').addEventListener('submit', (e) => { e.preventDefault(); const name = document.getElementById('debt-name').value; const amt = parseFloat(document.getElementById('debt-amount').value); data.debts.push({ id: Date.now(), name: name, amount: amt }); db.ref('financeData').set(data); e.target.reset(); });
     function delDebt(id) { if(confirm('Hapus?')) { data.debts = data.debts.filter(x => x.id !== id); db.ref('financeData').set(data); }}
     function renderDebt() { const t = document.getElementById('table-debt'); t.innerHTML = ''; data.debts.forEach(d => t.innerHTML += `<tr><td>${d.name}</td><td style="font-weight:bold; color:#f59e0b;">${formatRupiah(d.amount)}</td><td style="text-align:right;"><button class="btn-sm btn-del" onclick="delDebt(${d.id})">X</button></td></tr>`); }
 
+    // DAILY
     document.getElementById('form-daily').addEventListener('submit', (e) => { e.preventDefault(); const dateVal = document.getElementById('daily-date').value; const descVal = document.getElementById('daily-desc').value; const amtVal = parseFloat(document.getElementById('daily-amount').value); if(editingId) { const index = data.expenses.findIndex(x => x.id === editingId); if(index !== -1) { data.expenses[index].date = dateVal; data.expenses[index].desc = descVal; data.expenses[index].amount = amtVal; } } else { data.expenses.push({ id: Date.now(), date: dateVal, desc: descVal, amount: amtVal }); } db.ref('financeData').set(data); resetDailyForm(); });
     function delDaily(id) { if(confirm('Hapus?')) { data.expenses = data.expenses.filter(x => x.id !== id); db.ref('financeData').set(data); }}
     
     function renderDaily() { 
-        const t = document.getElementById('table-daily'); 
-        t.innerHTML = ''; 
+        const t = document.getElementById('table-daily'); t.innerHTML = ''; 
         const sorted = [...data.expenses].sort((a,b) => new Date(b.date) - new Date(a.date)); 
         sorted.forEach(e => { 
-            const d = new Date(e.date); 
-            const dateStr = d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' }) + ' ' + d.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }); 
-            
-            t.innerHTML += `
-            <tr>
-                <td class="col-desc">
-                    <span class="t-desc">${e.desc}</span>
-                    <span class="t-date">${dateStr}</span>
-                </td>
-                <td class="col-amount">${formatRupiah(e.amount)}</td>
-                <td class="col-action">
-                    <button class="btn-icon-action btn-icon-edit-row" onclick="startEdit(${e.id})">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-                    </button>
-                    <button class="btn-icon-action btn-icon-del-row" onclick="delDaily(${e.id})">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-                    </button>
-                </td>
-            </tr>`; 
+            const d = new Date(e.date); const dateStr = d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' }) + ' ' + d.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }); 
+            t.innerHTML += `<tr><td class="col-desc"><span class="t-desc">${e.desc}</span><span class="t-date">${dateStr}</span></td><td class="col-amount">${formatRupiah(e.amount)}</td><td class="col-action"><button class="btn-icon-action btn-icon-edit-row" onclick="startEdit(${e.id})"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button><button class="btn-icon-action btn-icon-del-row" onclick="delDaily(${e.id})"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button></td></tr>`; 
         }); 
     }
 
@@ -428,9 +475,10 @@
     
     function calcPnL() { 
         if(!xrpPrice) return; 
-        const costAldi = getVal('xrp-aldi') * getVal('buy-aldi'); const currAldi = getVal('xrp-aldi') * xrpPrice; const diffAldi = currAldi - costAldi;
+        const i = data.inputs; // Read from local data object
+        const costAldi = i.xrp_aldi * i.buy_aldi; const currAldi = i.xrp_aldi * xrpPrice; const diffAldi = currAldi - costAldi;
         updatePnLUI('aldi', costAldi, currAldi, diffAldi); 
-        const costSusi = getVal('xrp-susi') * getVal('buy-susi'); const currSusi = getVal('xrp-susi') * xrpPrice; const diffSusi = currSusi - costSusi;
+        const costSusi = i.xrp_susi * i.buy_susi; const currSusi = i.xrp_susi * xrpPrice; const diffSusi = currSusi - costSusi;
         updatePnLUI('susi', costSusi, currSusi, diffSusi); 
         const totalDiff = diffAldi + diffSusi; 
         const elTotal = document.getElementById('stat-total'); 
