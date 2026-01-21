@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Keuangan Pro V32 (Force 1 Line)</title>
+    <title>Keuangan Pro V33 (Custom Dashboard)</title>
     
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
@@ -32,10 +32,10 @@
             background-color: var(--bg-body);
             margin: 0; padding: 0;
             color: var(--text-main);
-            padding-bottom: 100px; /* Space for bottom nav */
+            padding-bottom: 100px;
+            user-select: none; /* Mencegah seleksi teks saat double click */
         }
 
-        /* --- LAYOUT --- */
         .container { max-width: 100%; padding: 20px; margin: 0 auto; }
         @media (min-width: 768px) {
             .container { max-width: 1000px; padding: 40px; }
@@ -71,6 +71,7 @@
             background: var(--card-bg); padding: 16px; border-radius: var(--radius);
             box-shadow: 0 2px 5px rgba(0,0,0,0.05); border: 1px solid #e2e8f0;
             display: flex; flex-direction: column; justify-content: center;
+            transition: all 0.3s ease;
         }
         .stat-label { font-size: 0.7rem; color: var(--text-sub); font-weight: 600; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
         .stat-value { font-size: 1.1rem; font-weight: 700; color: var(--text-main); }
@@ -79,6 +80,13 @@
         .stat-card.wishlist-stat .stat-label { color: #0284c7; }
         .stat-card.wishlist-stat .stat-value { color: #0369a1; }
         
+        /* Style khusus Dana Darurat saat Aktif */
+        .stat-card.active-fund {
+            border: 2px solid #3b82f6;
+            background: #eff6ff;
+            transform: scale(1.02);
+        }
+
         .stat-card.hidden-asset-stat { background: #f3e8ff; border-color: #e9d5ff; border-left: 4px solid #9333ea; }
         .stat-card.hidden-asset-stat .stat-label { color: #7e22ce; }
         .stat-card.hidden-asset-stat .stat-value { color: #6b21a8; }
@@ -170,57 +178,26 @@
             backdrop-filter: blur(10px); 
             border-top: 1px solid rgba(0,0,0,0.08); 
             z-index: 100; 
-            padding: 8px 0 12px 0; /* Padding atas/bawah */
+            padding: 8px 0 12px 0; 
             padding-bottom: max(12px, env(safe-area-inset-bottom));
-            
-            /* KUNCI SUPAYA TETAP 1 BARIS */
-            display: flex; /* Pakai Flexbox */
-            flex-direction: row;
-            flex-wrap: nowrap; /* Jangan pernah membungkus ke baris baru */
-            justify-content: space-evenly; /* Bagi rata */
-            align-items: center;
-            width: 100%;
+            display: flex; flex-direction: row; flex-wrap: nowrap;
+            justify-content: space-evenly; align-items: center; width: 100%;
         }
 
         .nav-item { 
             border: none; background: none; 
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             color: #94a3b8; cursor: pointer; 
-            transition: all 0.3s ease; 
-            font-weight: 600; 
-            
-            /* KUNCI: Supaya tidak makan tempat berlebih */
-            flex: 1; /* Ambil ruang sama rata */
-            min-width: 0; /* Biarkan mengecil jika sempit */
-            padding: 0;
+            transition: all 0.3s ease; font-weight: 600; 
+            flex: 1; min-width: 0; padding: 0;
         }
 
         .nav-item.active { color: #3b82f6; }
-        
-        .nav-icon { 
-            font-size: 1.5rem; 
-            margin-bottom: 3px; 
-            transition: all 0.2s ease;
-        }
-        
-        .nav-text {
-            font-size: 0.65rem;
-            white-space: nowrap; /* Teks jangan turun baris */
-            transition: all 0.2s ease;
-        }
+        .nav-icon { font-size: 1.5rem; margin-bottom: 3px; transition: all 0.2s ease; }
+        .nav-text { font-size: 0.65rem; white-space: nowrap; transition: all 0.2s ease; }
 
-        /* --- SAAT TAB HIDE MUNCUL (LEBIH PADAT) --- */
-        /* Kita kecilkan sedikit font dan icon supaya muat 7 tab dalam 1 baris */
-        .bottom-nav.has-hidden .nav-icon {
-            font-size: 1.3rem; /* Kecilkan icon */
-        }
-        
-        .bottom-nav.has-hidden .nav-text {
-            font-size: 0.55rem; /* Kecilkan teks */
-            letter-spacing: -0.2px; /* Rapatkan huruf */
-        }
-
-        /* Khusus Tab Hidden */
+        .bottom-nav.has-hidden .nav-icon { font-size: 1.3rem; }
+        .bottom-nav.has-hidden .nav-text { font-size: 0.55rem; letter-spacing: -0.2px; }
         #nav-hidden-btn.active { color: #9333ea; }
         
         .assets-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
@@ -239,18 +216,21 @@
         <div class="main-card">
             <div class="net-worth-label">Total Kekayaan Bersih</div>
             <div id="display-networth" class="net-worth-value">...</div>
-            <div style="font-size: 0.8rem; opacity: 0.7;">(Aset + Crypto + Piutang + Aset Hide) - Pengeluaran Tetap</div>
+            <div id="networth-note" style="font-size: 0.8rem; opacity: 0.7;">(Bank/E-Wallet + Gaji + Piutang) - Tetap</div>
         </div>
 
         <div class="dashboard-grid" id="main-dashboard-grid">
             <div class="stat-card">
-                <div class="stat-label">💰 Cash & Gaji</div>
+                <div class="stat-label">💰 BANK & E-WALLET</div>
                 <div id="sum-cash" class="stat-value" style="color: #10b981;">0</div>
             </div>
-            <div class="stat-card">
-                <div class="stat-label">🚀 Aset Crypto</div>
+            
+            <div class="stat-card" id="card-emergency" ondblclick="toggleEmergencyFund()">
+                <div class="stat-label">🚑 DANA DARURAT</div>
                 <div id="sum-xrp" class="stat-value" style="color: #3b82f6;">0</div>
+                <div style="font-size:0.6rem; color:#94a3b8; margin-top:4px;">(Klik 2x untuk Hitung)</div>
             </div>
+
             <div class="stat-card">
                 <div class="stat-label">📝 Piutang</div>
                 <div id="sum-debt" class="stat-value" style="color: #f59e0b;">0</div>
@@ -272,6 +252,11 @@
             <div class="stat-card full-width-mobile" style="background: #fef2f2; border-color: #fee2e2;">
                 <div class="stat-label" style="color: #ef4444;">⚠️ Total Pengeluaran Harian</div>
                 <div id="sum-expense" class="stat-value" style="color: #ef4444;">0</div>
+            </div>
+
+            <div class="stat-card full-width-mobile" style="background: #ecfdf5; border-color: #d1fae5;">
+                <div class="stat-label" style="color: #059669;">💵 Total Gaji</div>
+                <div id="sum-gaji" class="stat-value" style="color: #059669;">0</div>
             </div>
             
             <div id="hidden-assets-cards" style="display: contents;"></div>
@@ -305,7 +290,7 @@
         </div>
 
         <div class="section-title" style="margin-top:30px;">
-            <span>🚀 Aset Crypto (XRP)</span>
+            <span>🚑 Dana Darurat (XRP)</span>
             <div class="btn-action-group">
                 <button id="btn-edit-xrp" class="btn-pill edit" onclick="toggleEditMode('xrp', true)"><i class="ph ph-pencil-simple"></i> Edit</button>
                 <button id="btn-save-xrp" class="btn-pill save" onclick="saveAndLock('xrp')"><i class="ph ph-check-circle"></i> Simpan</button>
@@ -571,6 +556,9 @@
     let homeClickCount = 0;
     let homeClickTimer;
 
+    // Emergency Fund Logic (XRP)
+    let isEmergencyFundIncluded = false; // Default: TIDAK DIHITUNG
+
     function init() {
         const statusEl = document.getElementById('sync-status');
         db.ref('financeData').on('value', (snapshot) => {
@@ -671,11 +659,27 @@
         calcAll();
     }
 
+    // --- LOGIC TOGGLE EMERGENCY FUND (XRP) ---
+    function toggleEmergencyFund() {
+        isEmergencyFundIncluded = !isEmergencyFundIncluded;
+        const card = document.getElementById('card-emergency');
+        
+        if(isEmergencyFundIncluded) {
+            card.classList.add('active-fund');
+        } else {
+            card.classList.remove('active-fund');
+        }
+        calcAll();
+    }
+
     // --- CALCULATION ---
     function calcAll() {
         const i = data.inputs;
+        // Total Cash hanya Wallet & Bank
         const totalCash = (i.cash_wallet||0) + i.bca + i.blu + i.neo + i.rumah + i.shopee + i.gopay;
+        // Total Gaji dipisah
         const totalGaji = i.gaji1 + i.gaji2;
+        
         const totalDebt = data.debts.reduce((a,b) => a + b.amount, 0);
         const totalXrpIDR = (i.xrp_aldi + i.xrp_susi) * xrpPrice;
         const totalFixed = (i.fixed_ibuk||0) + (i.fixed_bapak||0) + (i.fixed_adik||0) + (i.fixed_wifi||0);
@@ -700,10 +704,24 @@
             });
         }
 
-        const netWorth = (totalCash + totalGaji + totalDebt + totalXrpIDR + totalHidden) - totalFixed;
+        // --- NET WORTH CALCULATION ---
+        // Rumus Dasar: (Uang + Gaji + Piutang + Hidden) - Tetap
+        let netWorth = (totalCash + totalGaji + totalDebt + totalHidden) - totalFixed;
+
+        // Tambahkan XRP hanya jika diaktifkan (Double Click)
+        if (isEmergencyFundIncluded) {
+            netWorth += totalXrpIDR;
+            document.getElementById('networth-note').innerText = "(Bank + Gaji + Piutang + Dana Darurat) - Tetap";
+        } else {
+            document.getElementById('networth-note').innerText = "(Bank + Gaji + Piutang) - Tetap";
+        }
 
         document.getElementById('display-networth').innerText = formatRupiah(netWorth);
-        document.getElementById('sum-cash').innerText = formatRupiah(totalCash + totalGaji);
+        
+        // Update Tampilan Kartu
+        document.getElementById('sum-cash').innerText = formatRupiah(totalCash); // Hanya Bank & Wallet
+        document.getElementById('sum-gaji').innerText = formatRupiah(totalGaji); // Gaji Sendiri
+        
         document.getElementById('sum-xrp').innerText = formatRupiah(totalXrpIDR);
         document.getElementById('sum-debt').innerText = formatRupiah(totalDebt);
         document.getElementById('sum-expense').innerText = formatRupiah(totalExpDaily);
