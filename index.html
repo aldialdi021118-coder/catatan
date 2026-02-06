@@ -3,37 +3,163 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Keuangan Pro V33 (Custom Dashboard)</title>
+    <title>Keuangan Pro V33 (Themes + Secret)</title>
     
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
 
     <style>
+        /* --- THEME VARIABLES --- */
         :root {
+            /* Default Theme (Modern Blue) */
             --bg-body: #f1f5f9;
             --card-bg: #ffffff;
-            --primary: #3b82f6;
-            --primary-grad: linear-gradient(135deg, #3b82f6, #2563eb);
-            --orange-grad: linear-gradient(135deg, #f59e0b, #d97706);
-            --purple-grad: linear-gradient(135deg, #8b5cf6, #7c3aed);
-            --dark-grad: linear-gradient(135deg, #1e293b, #0f172a);
             --text-main: #0f172a;
             --text-sub: #64748b;
-            --radius: 16px;
+            --primary: #3b82f6;
+            --primary-grad: linear-gradient(135deg, #3b82f6, #2563eb);
+            --card-grad: linear-gradient(135deg, #0f172a, #1e293b);
             --input-bg: #f8fafc;
+            --border-color: #e2e8f0;
+            --font-main: 'Plus Jakarta Sans', sans-serif;
+            --radius: 16px;
+            --shadow-card: 0 4px 20px -5px rgba(0,0,0,0.05);
+        }
+
+        /* 2. Dark Mode */
+        [data-theme="dark"] {
+            --bg-body: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #f1f5f9;
+            --text-sub: #94a3b8;
+            --primary: #60a5fa;
+            --primary-grad: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            --card-grad: linear-gradient(135deg, #020617, #0f172a);
+            --input-bg: #334155;
+            --border-color: #334155;
+        }
+
+        /* 3. Hacking (Matrix) */
+        [data-theme="hacking"] {
+            --bg-body: #000000;
+            --card-bg: #0a0a0a;
+            --text-main: #00ff41;
+            --text-sub: #008f11;
+            --primary: #00ff41;
+            --primary-grad: linear-gradient(135deg, #003b00, #008f11);
+            --card-grad: linear-gradient(135deg, #001a00, #000000);
+            --input-bg: #000000;
+            --border-color: #00ff41;
+            --font-main: 'Fira Code', monospace;
+            --radius: 0px;
+        }
+
+        /* 4. Cyberpunk */
+        [data-theme="cyberpunk"] {
+            --bg-body: #050511;
+            --card-bg: #13132b;
+            --text-main: #ff00ff;
+            --text-sub: #00e5ff;
+            --primary: #fcee0a;
+            --primary-grad: linear-gradient(135deg, #ff0099, #493240);
+            --card-grad: linear-gradient(135deg, #2a2a5e, #101026);
+            --input-bg: #1a1a3a;
+            --border-color: #00e5ff;
+            --radius: 4px;
+        }
+
+        /* 5. Luxury (Gold) */
+        [data-theme="luxury"] {
+            --bg-body: #1c1c1c;
+            --card-bg: #2a2a2a;
+            --text-main: #d4af37;
+            --text-sub: #a89f91;
+            --primary: #d4af37;
+            --primary-grad: linear-gradient(135deg, #d4af37, #aa8c2c);
+            --card-grad: linear-gradient(135deg, #111, #000);
+            --input-bg: #333;
+            --border-color: #444;
+            --radius: 12px;
+        }
+
+        /* 6. Nature */
+        [data-theme="nature"] {
+            --bg-body: #ecfdf5;
+            --card-bg: #ffffff;
+            --text-main: #064e3b;
+            --text-sub: #059669;
+            --primary: #10b981;
+            --primary-grad: linear-gradient(135deg, #10b981, #059669);
+            --card-grad: linear-gradient(135deg, #065f46, #064e3b);
+            --input-bg: #d1fae5;
+            --border-color: #a7f3d0;
+        }
+
+        /* 7. Ocean */
+        [data-theme="ocean"] {
+            --bg-body: #f0f9ff;
+            --card-bg: #ffffff;
+            --text-main: #0c4a6e;
+            --text-sub: #0284c7;
+            --primary: #0ea5e9;
+            --primary-grad: linear-gradient(135deg, #0ea5e9, #0369a1);
+            --card-grad: linear-gradient(135deg, #075985, #0c4a6e);
+            --input-bg: #e0f2fe;
+            --border-color: #bae6fd;
+        }
+
+        /* 8. Sunset */
+        [data-theme="sunset"] {
+            --bg-body: #fff7ed;
+            --card-bg: #fff;
+            --text-main: #7c2d12;
+            --text-sub: #ea580c;
+            --primary: #f97316;
+            --primary-grad: linear-gradient(135deg, #f97316, #c2410c);
+            --card-grad: linear-gradient(135deg, #9a3412, #7c2d12);
+            --input-bg: #ffedd5;
+            --border-color: #fed7aa;
+        }
+
+        /* 9. Retro (Pixel) */
+        [data-theme="retro"] {
+            --bg-body: #dfd8c8;
+            --card-bg: #e8e0d0;
+            --text-main: #4a4136;
+            --text-sub: #786d63;
+            --primary: #d97706;
+            --primary-grad: linear-gradient(135deg, #d97706, #b45309);
+            --card-grad: linear-gradient(135deg, #57534e, #44403c);
+            --input-bg: #d6cfbf;
+            --border-color: #a8a29e;
+            --radius: 2px;
+        }
+
+        /* 10. Monochrome */
+        [data-theme="mono"] {
+            --bg-body: #ffffff;
+            --card-bg: #ffffff;
+            --text-main: #000000;
+            --text-sub: #555555;
+            --primary: #000000;
+            --primary-grad: linear-gradient(135deg, #333, #000);
+            --card-grad: linear-gradient(135deg, #000, #222);
+            --input-bg: #f4f4f4;
+            --border-color: #000;
+            --radius: 0px;
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-family: var(--font-main);
             background-color: var(--bg-body);
             margin: 0; padding: 0;
             color: var(--text-main);
             padding-bottom: 100px;
-            user-select: none; /* Mencegah seleksi teks saat double click */
+            transition: background-color 0.5s ease, color 0.5s ease;
         }
 
         .container { max-width: 100%; padding: 20px; margin: 0 auto; }
@@ -43,66 +169,46 @@
             .assets-grid { grid-template-columns: 1fr 1fr; gap: 24px; }
         }
 
-        /* --- DASHBOARD --- */
+        /* --- UI ELEMENTS --- */
         .main-card {
-            background: linear-gradient(135deg, #0f172a, #1e293b);
-            color: white; border-radius: 24px; 
-            padding: 24px 20px;
-            text-align: center; margin-bottom: 25px;
-            box-shadow: 0 10px 30px -10px rgba(15, 23, 42, 0.5);
-            position: relative; overflow: hidden;
+            background: var(--card-grad);
+            color: white; border-radius: var(--radius); 
+            padding: 24px 20px; text-align: center; margin-bottom: 25px;
+            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
+            position: relative; overflow: hidden; cursor: pointer;
+            transition: transform 0.1s;
         }
-        .main-card::after {
-            content: ''; position: absolute; top: -50px; right: -50px; width: 150px; height: 150px;
-            background: rgba(59, 130, 246, 0.2); filter: blur(50px); border-radius: 50%;
-        }
+        .main-card:active { transform: scale(0.98); }
         .net-worth-label { font-size: 0.8rem; letter-spacing: 1px; opacity: 0.8; text-transform: uppercase; margin-bottom: 8px; font-weight: 600; }
-        .net-worth-value { 
-            font-size: clamp(2rem, 7vw, 3.2rem); 
-            font-weight: 800; margin: 5px 0; letter-spacing: -1px; line-height: 1.1; word-wrap: break-word; 
-        }
+        .net-worth-value { font-size: clamp(2rem, 7vw, 3.2rem); font-weight: 800; margin: 5px 0; letter-spacing: -1px; line-height: 1.1; word-wrap: break-word; }
 
-        /* --- STAT CARDS --- */
         .dashboard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 30px; }
         .dashboard-grid .full-width-mobile { grid-column: span 2; }
         @media (min-width: 768px) { .dashboard-grid .full-width-mobile { grid-column: span 1; } }
 
         .stat-card {
             background: var(--card-bg); padding: 16px; border-radius: var(--radius);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05); border: 1px solid #e2e8f0;
+            box-shadow: var(--shadow-card); border: 1px solid var(--border-color);
             display: flex; flex-direction: column; justify-content: center;
             transition: all 0.3s ease;
         }
         .stat-label { font-size: 0.7rem; color: var(--text-sub); font-weight: 600; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
         .stat-value { font-size: 1.1rem; font-weight: 700; color: var(--text-main); }
         
-        .stat-card.wishlist-stat { background: #f0f9ff; border-color: #e0f2fe; }
-        .stat-card.wishlist-stat .stat-label { color: #0284c7; }
-        .stat-card.wishlist-stat .stat-value { color: #0369a1; }
-        
-        /* Style khusus Dana Darurat saat Aktif */
-        .stat-card.active-fund {
-            border: 2px solid #3b82f6;
-            background: #eff6ff;
-            transform: scale(1.02);
-        }
+        /* Elements to Hide/Show Logic */
+        .secret-element { display: none !important; animation: fadeIn 0.5s; }
+        .secret-element.revealed { display: flex !important; }
+        .secret-element.revealed-block { display: block !important; }
 
-        .stat-card.hidden-asset-stat { background: #f3e8ff; border-color: #e9d5ff; border-left: 4px solid #9333ea; }
-        .stat-card.hidden-asset-stat .stat-label { color: #7e22ce; }
-        .stat-card.hidden-asset-stat .stat-value { color: #6b21a8; }
-
-        /* --- MODERN FORM --- */
+        /* General Inputs & Buttons */
         .section-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; color: var(--text-main); }
         .modern-card {
-            background: white; border-radius: 20px; padding: 20px;
-            box-shadow: 0 4px 20px -5px rgba(0,0,0,0.05); border: 1px solid white;
+            background: var(--card-bg); border-radius: var(--radius); padding: 20px;
+            box-shadow: var(--shadow-card); border: 1px solid var(--border-color);
             margin-bottom: 25px;
         }
         .input-group { position: relative; margin-bottom: 15px; }
-        .input-icon {
-            position: absolute; left: 16px; top: 50%; transform: translateY(-50%);
-            font-size: 1.2rem; color: #94a3b8; transition: color 0.3s;
-        }
+        .input-icon { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); font-size: 1.2rem; color: var(--text-sub); }
         .modern-input {
             width: 100%; background: var(--input-bg);
             border: 2px solid transparent; border-radius: 14px;
@@ -110,25 +216,18 @@
             font-size: 0.95rem; font-weight: 600; color: var(--text-main);
             transition: all 0.3s ease;
         }
-        .modern-input:focus { background: white; border-color: var(--primary); box-shadow: 0 4px 15px rgba(59, 130, 246, 0.1); outline: none; }
-        .modern-input:focus + .input-icon { color: var(--primary); }
-        .modern-input::placeholder { color: #cbd5e1; font-weight: 500; }
-
+        .modern-input:focus { background: var(--card-bg); border-color: var(--primary); outline: none; }
+        
         .btn-modern {
             width: 100%; border: none; padding: 16px; border-radius: 14px;
             font-size: 1rem; font-weight: 700; color: white; cursor: pointer;
             display: flex; align-items: center; justify-content: center; gap: 8px;
-            transition: transform 0.2s; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            background: var(--primary-grad); box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
-        .btn-modern:active { transform: scale(0.97); }
-        .btn-blue { background: var(--primary-grad); }
-        .btn-orange { background: var(--orange-grad); }
-        .btn-purple { background: var(--purple-grad); }
         .btn-cancel { background: #64748b; margin-top: 10px; }
 
-        /* --- ASSET LIST --- */
-        .asset-list-container { background: white; border-radius: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.03); border: 1px solid #e2e8f0; overflow: hidden; margin-bottom: 20px; }
-        .asset-row { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; border-bottom: 1px solid #f1f5f9; }
+        .asset-list-container { background: var(--card-bg); border-radius: var(--radius); box-shadow: var(--shadow-card); border: 1px solid var(--border-color); overflow: hidden; margin-bottom: 20px; }
+        .asset-row { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; border-bottom: 1px solid var(--border-color); }
         .asset-row:last-child { border-bottom: none; }
         .asset-info { display: flex; align-items: center; gap: 15px; flex: 1; }
         .asset-logo { width: 36px; height: 36px; object-fit: contain; }
@@ -137,86 +236,110 @@
             text-align: right; font-weight: 700; font-size: 1rem; color: var(--text-main);
             border: none; background: transparent; width: 130px; padding: 5px 0; outline: none;
         }
-        .asset-input-small:not(:disabled) { background: #eff6ff; border-radius: 8px; padding: 8px; color: #2563eb; }
+        .asset-input-small:not(:disabled) { background: var(--input-bg); border-radius: 8px; padding: 8px; color: var(--primary); }
 
-        /* --- XRP & WISHLIST --- */
-        .xrp-container { padding: 15px; background: #f8fafc; border-radius: 16px; border: 1px solid #e2e8f0; }
-        .xrp-card { background: white; border: 1px solid #e2e8f0; border-radius: 14px; padding: 15px; margin-bottom: 15px; }
-        .xrp-header { display: flex; align-items: center; margin-bottom: 12px; gap: 10px; border-bottom: 1px dashed #e2e8f0; padding-bottom: 8px; font-weight: 600; }
-        .xrp-grid-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 10px; }
-        .xrp-label { font-size: 0.7rem; color: var(--text-sub); margin-bottom: 4px; font-weight: 600; }
-        .xrp-field { width: 100%; padding: 10px; border-radius: 10px; font-weight: 700; font-size: 0.9rem; border: 1px solid #e2e8f0; background: #fff; }
-        .xrp-field:disabled { background: #f8fafc; color: #94a3b8; }
-        
-        .pnl-result { background: #1e293b; color: white; padding: 10px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem; }
-        .text-green { color: #4ade80; font-weight: 700; }
-        .text-red { color: #f87171; font-weight: 700; }
-
-        .wishlist-toggle { display: flex; background: #e2e8f0; border-radius: 12px; padding: 4px; margin-bottom: 20px; }
-        .wishlist-tab { flex: 1; border: none; background: transparent; padding: 10px; border-radius: 10px; font-size: 0.9rem; font-weight: 600; color: #64748b; cursor: pointer; transition: 0.3s; }
-        .wishlist-tab.active { background: white; color: #0f172a; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .wishlist-total-header { background: #0ea5e9; color: white; padding: 20px; border-radius: 20px; text-align: center; margin-bottom: 20px; box-shadow: 0 8px 20px -5px rgba(14, 165, 233, 0.4); }
-
-        .btn-action-group { display: flex; gap: 8px; }
-        .btn-pill { padding: 6px 14px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; border: none; cursor: pointer; display: flex; align-items: center; gap: 4px; transition: 0.2s; }
-        .btn-pill.edit { background: white; color: #0f172a; border: 1px solid #e2e8f0; }
-        .btn-pill.save { background: #10b981; color: white; display: none; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3); }
-
-        .transaction-table { width: 100%; border-collapse: collapse; }
-        .transaction-table td { padding: 16px 12px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
-        .t-desc { font-weight: 600; display: block; font-size: 0.95rem; }
-        .t-date { font-size: 0.75rem; color: #94a3b8; }
-        .t-amt { text-align: right; font-weight: 700; color: #ef4444; font-size: 0.95rem; }
-        .btn-icon { width: 34px; height: 34px; border-radius: 10px; border: none; display: inline-flex; align-items: center; justify-content: center; margin-left: 6px; cursor: pointer; transition: 0.2s; }
-        .btn-icon.edit { background: #eff6ff; color: #3b82f6; }
-        .btn-icon.del { background: #fef2f2; color: #ef4444; }
-
-        /* --- NAVIGASI BAWAH (FIXED 1 LINE) --- */
+        /* Bottom Nav */
         .bottom-nav { 
             position: fixed; bottom: 0; left: 0; right: 0; 
-            background: rgba(255,255,255,0.98); 
-            backdrop-filter: blur(10px); 
-            border-top: 1px solid rgba(0,0,0,0.08); 
+            background: var(--card-bg);
+            border-top: 1px solid var(--border-color);
             z-index: 100; 
             padding: 8px 0 12px 0; 
             padding-bottom: max(12px, env(safe-area-inset-bottom));
-            display: flex; flex-direction: row; flex-wrap: nowrap;
-            justify-content: space-evenly; align-items: center; width: 100%;
+            display: flex; justify-content: space-evenly; align-items: center; width: 100%;
         }
-
         .nav-item { 
             border: none; background: none; 
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            color: #94a3b8; cursor: pointer; 
-            transition: all 0.3s ease; font-weight: 600; 
-            flex: 1; min-width: 0; padding: 0;
+            color: var(--text-sub); cursor: pointer; font-weight: 600; flex: 1;
         }
+        .nav-item.active { color: var(--primary); }
+        .nav-icon { font-size: 1.5rem; margin-bottom: 3px; }
+        .nav-text { font-size: 0.65rem; }
 
-        .nav-item.active { color: #3b82f6; }
-        .nav-icon { font-size: 1.5rem; margin-bottom: 3px; transition: all 0.2s ease; }
-        .nav-text { font-size: 0.65rem; white-space: nowrap; transition: all 0.2s ease; }
+        /* Theme Switcher & Toast */
+        .settings-btn {
+            position: absolute; top: 20px; right: 20px;
+            background: rgba(255,255,255,0.2); color: white;
+            border: none; border-radius: 50%; width: 40px; height: 40px;
+            display: flex; align-items: center; justify-content: center; cursor: pointer;
+            backdrop-filter: blur(5px); z-index: 10;
+        }
+        .theme-modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8); z-index: 2000;
+            display: none; justify-content: center; align-items: center;
+            padding: 20px;
+        }
+        .theme-content {
+            background: var(--card-bg); width: 100%; max-width: 400px;
+            border-radius: 24px; padding: 24px; max-height: 80vh; overflow-y: auto;
+        }
+        .theme-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
+        .theme-option {
+            padding: 15px; border-radius: 12px; border: 2px solid var(--border-color);
+            text-align: center; cursor: pointer; font-weight: 600; font-size: 0.8rem;
+            background: var(--bg-body); color: var(--text-main);
+        }
+        .theme-option:hover { border-color: var(--primary); }
 
-        .bottom-nav.has-hidden .nav-icon { font-size: 1.3rem; }
-        .bottom-nav.has-hidden .nav-text { font-size: 0.55rem; letter-spacing: -0.2px; }
-        #nav-hidden-btn.active { color: #9333ea; }
-        
-        .assets-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
+        .toast-notification {
+            position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%);
+            background: #333; color: white; padding: 10px 20px; border-radius: 30px;
+            font-size: 0.85rem; font-weight: 600; opacity: 0; pointer-events: none;
+            transition: opacity 0.3s, transform 0.3s; z-index: 3000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            white-space: nowrap;
+        }
+        .toast-notification.show { opacity: 1; transform: translateX(-50%) translateY(-10px); }
+
+        /* Utils */
         .tab-content { display: none; animation: fadeIn 0.3s; }
         .tab-content.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .btn-pill { padding: 6px 14px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; border: none; cursor: pointer; display: flex; align-items: center; gap: 4px; }
+        .btn-pill.edit { background: var(--bg-body); color: var(--text-main); border: 1px solid var(--border-color); }
+        .btn-pill.save { background: var(--primary); color: white; display: none; }
         
-        .status-bar { text-align: center; font-size: 0.75rem; padding: 6px; color: white; background: #64748b; font-weight: 600; }
+        /* Transaction Table */
+        .transaction-table { width: 100%; border-collapse: collapse; }
+        .transaction-table td { padding: 16px 12px; border-bottom: 1px solid var(--border-color); }
+        .t-desc { font-weight: 600; display: block; color: var(--text-main); }
+        .t-amt { text-align: right; font-weight: 700; color: #ef4444; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
-    <div class="status-bar" id="sync-status">Menghubungkan...</div>
+    <div class="status-bar" id="sync-status" style="text-align:center; font-size:0.7rem; padding:5px; background:var(--primary); color:white; display:none;">Menghubungkan...</div>
+    
+    <div id="toast" class="toast-notification">Notification</div>
+
+    <div id="theme-modal" class="theme-modal" onclick="closeThemeModal(event)">
+        <div class="theme-content">
+            <h3 style="margin-top:0; color:var(--text-main);">Pilih Tema</h3>
+            <div class="theme-grid">
+                <div class="theme-option" onclick="setTheme('default')" style="background:#f1f5f9; color:#0f172a;">Default</div>
+                <div class="theme-option" onclick="setTheme('dark')" style="background:#0f172a; color:#fff;">Dark Mode</div>
+                <div class="theme-option" onclick="setTheme('hacking')" style="background:#000; color:#00ff41; border-color:#00ff41;">Hacking</div>
+                <div class="theme-option" onclick="setTheme('cyberpunk')" style="background:#13132b; color:#ff00ff; border-color:#00e5ff;">Cyberpunk</div>
+                <div class="theme-option" onclick="setTheme('luxury')" style="background:#1c1c1c; color:#d4af37; border-color:#d4af37;">Luxury</div>
+                <div class="theme-option" onclick="setTheme('nature')" style="background:#ecfdf5; color:#064e3b;">Nature</div>
+                <div class="theme-option" onclick="setTheme('ocean')" style="background:#f0f9ff; color:#0c4a6e;">Ocean</div>
+                <div class="theme-option" onclick="setTheme('sunset')" style="background:#fff7ed; color:#7c2d12;">Sunset</div>
+                <div class="theme-option" onclick="setTheme('retro')" style="background:#e8e0d0; color:#4a4136;">Retro</div>
+                <div class="theme-option" onclick="setTheme('mono')" style="background:#fff; color:#000; border:1px solid #000;">Mono</div>
+            </div>
+            <button class="btn-modern btn-cancel" onclick="document.getElementById('theme-modal').style.display='none'">Tutup</button>
+        </div>
+    </div>
 
     <div id="tab-home" class="container tab-content active">
-        <div class="main-card">
+        <div class="main-card" id="card-networth">
+            <button class="settings-btn" onclick="event.stopPropagation(); document.getElementById('theme-modal').style.display='flex'"><i class="ph ph-gear" style="font-size:1.2rem;"></i></button>
             <div class="net-worth-label">Total Kekayaan Bersih</div>
             <div id="display-networth" class="net-worth-value">...</div>
-            <div id="networth-note" style="font-size: 0.8rem; opacity: 0.7;">(Bank/E-Wallet + Gaji + Piutang) - Tetap</div>
+            <div id="networth-note" style="font-size: 0.8rem; opacity: 0.7;">(Bank + Gaji + Piutang) - Tetap</div>
         </div>
 
         <div class="dashboard-grid" id="main-dashboard-grid">
@@ -225,10 +348,9 @@
                 <div id="sum-cash" class="stat-value" style="color: #10b981;">0</div>
             </div>
             
-            <div class="stat-card" id="card-emergency" ondblclick="toggleEmergencyFund()">
+            <div class="stat-card secret-element" id="card-emergency">
                 <div class="stat-label">🚑 DANA DARURAT</div>
-                <div id="sum-xrp" class="stat-value" style="color: #3b82f6;">0</div>
-                <div style="font-size:0.6rem; color:#94a3b8; margin-top:4px;">(Klik 2x untuk Hitung)</div>
+                <div id="sum-xrp" class="stat-value" style="color: var(--primary);">0</div>
             </div>
 
             <div class="stat-card">
@@ -240,21 +362,21 @@
                 <div id="sum-fixed" class="stat-value" style="color: #8b5cf6;">0</div>
             </div>
             
-            <div class="stat-card wishlist-stat">
-                <div class="stat-label">🌠 Wishlist Sementara</div>
+            <div class="stat-card">
+                <div class="stat-label" style="color:#0284c7">🌠 Wishlist Sementara</div>
                 <div id="sum-wishlist-temp" class="stat-value">0</div>
             </div>
-            <div class="stat-card wishlist-stat">
-                <div class="stat-label">🏆 Wishlist Permanen</div>
+            <div class="stat-card">
+                <div class="stat-label" style="color:#0369a1">🏆 Wishlist Permanen</div>
                 <div id="sum-wishlist-perm" class="stat-value">0</div>
             </div>
 
-            <div class="stat-card full-width-mobile" style="background: #fef2f2; border-color: #fee2e2;">
+            <div class="stat-card full-width-mobile" style="border-color: #fee2e2;">
                 <div class="stat-label" style="color: #ef4444;">⚠️ Total Pengeluaran Harian</div>
                 <div id="sum-expense" class="stat-value" style="color: #ef4444;">0</div>
             </div>
 
-            <div class="stat-card full-width-mobile" style="background: #ecfdf5; border-color: #d1fae5;">
+            <div class="stat-card full-width-mobile" style="border-color: #d1fae5;">
                 <div class="stat-label" style="color: #059669;">💵 Total Gaji</div>
                 <div id="sum-gaji" class="stat-value" style="color: #059669;">0</div>
             </div>
@@ -266,7 +388,7 @@
     <div id="tab-assets" class="container tab-content">
         <div class="section-title">
             <span>Aset & Tabungan</span>
-            <div class="btn-action-group">
+            <div class="btn-action-group" style="display:flex; gap:8px;">
                 <button id="btn-edit-assets" class="btn-pill edit" onclick="toggleEditMode('assets', true)"><i class="ph ph-pencil-simple"></i> Edit</button>
                 <button id="btn-save-assets" class="btn-pill save" onclick="saveAndLock('assets')"><i class="ph ph-check-circle"></i> Simpan</button>
             </div>
@@ -274,11 +396,11 @@
 
         <div class="assets-grid">
             <div class="asset-list-container">
-                <div class="asset-row"><div class="asset-info"><img src="https://cdn-icons-png.flaticon.com/512/2331/2331941.png" class="asset-logo"><span class="asset-name">Uang Tunai (Dompet)</span></div><input type="number" id="in-cash-wallet" class="asset-input-small assets-input" placeholder="0" disabled></div>
+                <div class="asset-row"><div class="asset-info"><img src="https://cdn-icons-png.flaticon.com/512/2331/2331941.png" class="asset-logo"><span class="asset-name">Uang Tunai</span></div><input type="number" id="in-cash-wallet" class="asset-input-small assets-input" placeholder="0" disabled></div>
                 <div class="asset-row"><div class="asset-info"><img src="https://upload.wikimedia.org/wikipedia/commons/5/5c/Bank_Central_Asia.svg" class="asset-logo"><span class="asset-name">Bank BCA</span></div><input type="number" id="in-bca" class="asset-input-small assets-input" placeholder="0" disabled></div>
                 <div class="asset-row"><div class="asset-info"><img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEif0vt8YuRIv8NL29pArzsxq9lLkFCwLKZwrNx4flOTW13MUORiMkdMqFB8REjOjQLpcTEPUSu0yHLj6j1dGUVYHsf9FwcakDUhoPnRBvADwdAyka28fwrXpzZ-tpHQnfLVOarAbfYA0Ev0bOOv56NnhFnN0NSE9x2_wFiaQkqS9OR5r-lDGIKG5e5Z/s400/GKL38_logo%20blu%20-%20Koleksilogo.com.jpg" class="asset-logo" style="border-radius:50%;"><span class="asset-name">Blu BCA</span></div><input type="number" id="in-blu" class="asset-input-small assets-input" placeholder="0" disabled></div>
                 <div class="asset-row"><div class="asset-info"><img src="https://i.pinimg.com/736x/70/5c/21/705c215302c838ff757beffe34c99beb.jpg" class="asset-logo" style="border-radius:50%;"><span class="asset-name">Bank Neo</span></div><input type="number" id="in-neo" class="asset-input-small assets-input" placeholder="0" disabled></div>
-                <div class="asset-row"><div class="asset-info"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkyLnNhTmU9Ae3mDAxPXY6t_4JoioxTpL7HA&s" class="asset-logo" style="border-radius:4px;"><span class="asset-name">Tabungan Rumah</span></div><input type="number" id="in-rumah" class="asset-input-small assets-input" placeholder="0" disabled></div>
+                <div class="asset-row"><div class="asset-info"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkyLnNhTmU9Ae3mDAxPXY6t_4JoioxTpL7HA&s" class="asset-logo" style="border-radius:4px;"><span class="asset-name">Tab. Rumah</span></div><input type="number" id="in-rumah" class="asset-input-small assets-input" placeholder="0" disabled></div>
                 <div class="asset-row"><div class="asset-info"><img src="https://upload.wikimedia.org/wikipedia/commons/f/fe/Shopee.svg" class="asset-logo"><span class="asset-name">ShopeePay</span></div><input type="number" id="in-shopee" class="asset-input-small assets-input" placeholder="0" disabled></div>
                 <div class="asset-row"><div class="asset-info"><img src="https://upload.wikimedia.org/wikipedia/commons/8/86/Gopay_logo.svg" class="asset-logo"><span class="asset-name">GoPay</span></div><input type="number" id="in-gopay" class="asset-input-small assets-input" placeholder="0" disabled></div>
             </div>
@@ -289,69 +411,61 @@
             </div>
         </div>
 
-        <div class="section-title" style="margin-top:30px;">
-            <span>🚑 Dana Darurat (XRP)</span>
-            <div class="btn-action-group">
-                <button id="btn-edit-xrp" class="btn-pill edit" onclick="toggleEditMode('xrp', true)"><i class="ph ph-pencil-simple"></i> Edit</button>
-                <button id="btn-save-xrp" class="btn-pill save" onclick="saveAndLock('xrp')"><i class="ph ph-check-circle"></i> Simpan</button>
+        <div id="xrp-input-section" class="secret-element" style="flex-direction: column;">
+            <div class="section-title" style="margin-top:30px;">
+                <span>🚑 Dana Darurat (XRP)</span>
+                <div class="btn-action-group" style="display:flex; gap:8px;">
+                    <button id="btn-edit-xrp" class="btn-pill edit" onclick="toggleEditMode('xrp', true)"><i class="ph ph-pencil-simple"></i> Edit</button>
+                    <button id="btn-save-xrp" class="btn-pill save" onclick="saveAndLock('xrp')"><i class="ph ph-check-circle"></i> Simpan</button>
+                </div>
             </div>
-        </div>
-        
-        <div class="xrp-container">
-            <div style="text-align: center; margin-bottom: 15px; font-size: 0.8rem; color: #64748b; font-weight: 600;">
-                LIVE PRICE: <span id="xrp-live-price" style="color: #0f172a; font-weight: 800;">...</span>
-            </div>
+            
+            <div style="padding: 15px; background: var(--input-bg); border-radius: 16px; border: 1px solid var(--border-color);">
+                <div style="text-align: center; margin-bottom: 15px; font-size: 0.8rem; color: var(--text-sub); font-weight: 600;">
+                    LIVE: <span id="xrp-live-price" style="color: var(--text-main); font-weight: 800;">...</span>
+                </div>
 
-            <div class="xrp-card">
-                <div class="xrp-header">
-                    <img src="https://cdn.worldvectorlogo.com/logos/xrp-symbol-black.svg" style="height:24px;">
-                    <span>Dompet Aldi</span>
-                </div>
-                <div class="xrp-grid-inputs">
-                    <div class="xrp-input-group">
-                        <label class="xrp-label">JUMLAH KOIN</label>
-                        <input type="number" id="xrp-aldi" class="xrp-field xrp-input" placeholder="0.00" step="any" disabled>
+                <div style="background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 14px; padding: 15px; margin-bottom: 15px;">
+                    <div style="display: flex; align-items: center; margin-bottom: 12px; gap: 10px; border-bottom: 1px dashed var(--border-color); padding-bottom: 8px; font-weight: 600;">
+                        <span>Dompet Aldi</span>
                     </div>
-                    <div class="xrp-input-group">
-                        <label class="xrp-label">MODAL / KOIN</label>
-                        <input type="number" id="buy-aldi" class="xrp-field xrp-input" placeholder="0" disabled>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 10px;">
+                        <div>
+                            <label style="font-size:0.7rem; color:var(--text-sub);">KOIN</label>
+                            <input type="number" id="xrp-aldi" class="modern-input xrp-input" style="padding:8px;" placeholder="0.00" step="any" disabled>
+                        </div>
+                        <div>
+                            <label style="font-size:0.7rem; color:var(--text-sub);">MODAL</label>
+                            <input type="number" id="buy-aldi" class="modern-input xrp-input" style="padding:8px;" placeholder="0" disabled>
+                        </div>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; font-size:0.85rem;">
+                        <span>PnL</span><span id="stat-aldi">Rp 0</span>
                     </div>
                 </div>
-                <div class="pnl-result">
-                    <span>PnL</span>
-                    <span id="stat-aldi" style="color:#94a3b8;">Rp 0</span>
-                </div>
-            </div>
 
-            <div class="xrp-card">
-                <div class="xrp-header">
-                    <img src="https://cdn.worldvectorlogo.com/logos/xrp-symbol-black.svg" style="height:24px;">
-                    <span>Dompet Susilowati</span>
-                </div>
-                <div class="xrp-grid-inputs">
-                    <div class="xrp-input-group">
-                        <label class="xrp-label">JUMLAH KOIN</label>
-                        <input type="number" id="xrp-susi" class="xrp-field xrp-input" placeholder="0.00" step="any" disabled>
+                <div style="background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 14px; padding: 15px; margin-bottom: 15px;">
+                    <div style="display: flex; align-items: center; margin-bottom: 12px; gap: 10px; border-bottom: 1px dashed var(--border-color); padding-bottom: 8px; font-weight: 600;">
+                        <span>Dompet Susilowati</span>
                     </div>
-                    <div class="xrp-input-group">
-                        <label class="xrp-label">MODAL / KOIN</label>
-                        <input type="number" id="buy-susi" class="xrp-field xrp-input" placeholder="0" disabled>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 10px;">
+                        <div>
+                            <label style="font-size:0.7rem; color:var(--text-sub);">KOIN</label>
+                            <input type="number" id="xrp-susi" class="modern-input xrp-input" style="padding:8px;" placeholder="0.00" step="any" disabled>
+                        </div>
+                        <div>
+                            <label style="font-size:0.7rem; color:var(--text-sub);">MODAL</label>
+                            <input type="number" id="buy-susi" class="modern-input xrp-input" style="padding:8px;" placeholder="0" disabled>
+                        </div>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; font-size:0.85rem;">
+                        <span>PnL</span><span id="stat-susi">Rp 0</span>
                     </div>
                 </div>
-                <div class="pnl-result">
-                    <span>PnL</span>
-                    <span id="stat-susi" style="color:#94a3b8;">Rp 0</span>
-                </div>
-            </div>
-
-            <div style="text-align:center; padding:15px; border-top: 1px dashed #cbd5e1; margin-top:10px;">
-                <div style="font-size:0.7rem; font-weight:700; color:#94a3b8; margin-bottom:5px; letter-spacing:1px;">TOTAL PROFIT GABUNGAN</div>
-                <div id="stat-total" style="font-size:1.5rem; font-weight:800; color:#1e293b;">Rp 0</div>
             </div>
         </div>
 
         <div class="section-title" style="margin-top:30px;">📝 Buku Piutang</div>
-        
         <div class="modern-card">
             <form id="form-debt">
                 <div class="input-group">
@@ -362,12 +476,9 @@
                     <i class="ph ph-money input-icon"></i>
                     <input type="number" id="debt-amount" class="modern-input" placeholder="Nominal (Rp)" required>
                 </div>
-                <button type="submit" class="btn-modern btn-orange">
-                    <i class="ph ph-plus-circle" style="font-size:1.2rem;"></i> Catat Hutang
-                </button>
+                <button type="submit" class="btn-modern" style="background: var(--primary);">Catat Hutang</button>
             </form>
         </div>
-        
         <div class="asset-list-container" style="padding: 0;">
             <table id="table-debt" class="transaction-table"></table>
         </div>
@@ -376,19 +487,17 @@
     <div id="tab-fixed" class="container tab-content">
         <div class="section-title">
             <span style="color: #8b5cf6;">Pengeluaran Tetap</span>
-            <div class="btn-action-group">
+            <div class="btn-action-group" style="display:flex; gap:8px;">
                 <button id="btn-edit-fixed" class="btn-pill edit" onclick="toggleEditMode('fixed', true)"><i class="ph ph-pencil-simple"></i> Edit</button>
                 <button id="btn-save-fixed" class="btn-pill save" onclick="saveAndLock('fixed')"><i class="ph ph-check-circle"></i> Simpan</button>
             </div>
         </div>
-        <p style="font-size:0.85rem; color:#94a3b8; margin-bottom:20px;">Dana wajib bulanan (Mengurangi Harta).</p>
-
         <div class="asset-list-container">
             <div class="asset-row"><div class="asset-info"><span class="asset-name">👩 Ibuk</span></div><input type="number" id="in-fixed-ibuk" class="asset-input-small fixed-input" placeholder="0" disabled></div>
             <div class="asset-row"><div class="asset-info"><span class="asset-name">👨 Bapak</span></div><input type="number" id="in-fixed-bapak" class="asset-input-small fixed-input" placeholder="0" disabled></div>
             <div class="asset-row"><div class="asset-info"><span class="asset-name">🧒 Adik</span></div><input type="number" id="in-fixed-adik" class="asset-input-small fixed-input" placeholder="0" disabled></div>
             <div class="asset-row"><div class="asset-info"><span class="asset-name">📶 WiFi</span></div><input type="number" id="in-fixed-wifi" class="asset-input-small fixed-input" placeholder="0" disabled></div>
-            <div style="padding: 20px; text-align: right; background: #f8fafc;">
+            <div style="padding: 20px; text-align: right; background: var(--input-bg);">
                 <span style="font-size: 1rem; color: #8b5cf6; font-weight: 800;">Total: <span id="total-fixed-display">Rp 0</span></span>
             </div>
         </div>
@@ -396,32 +505,16 @@
 
     <div id="tab-daily" class="container tab-content">
         <div class="section-title">Pengeluaran Harian</div>
-        
         <div class="modern-card">
             <form id="form-daily">
-                <div class="input-group">
-                    <i class="ph ph-calendar-blank input-icon"></i>
-                    <input type="datetime-local" class="modern-input" id="daily-date" required>
-                </div>
-                
-                <div class="input-group">
-                    <i class="ph ph-tag input-icon"></i>
-                    <input type="text" class="modern-input" id="daily-desc" placeholder="Keperluan (Cth: Bensin)" required>
-                </div>
-                
-                <div class="input-group">
-                    <i class="ph ph-wallet input-icon"></i>
-                    <input type="number" class="modern-input" id="daily-amount" placeholder="Nominal (Rp)" required>
-                </div>
-                
-                <button type="submit" id="btn-daily-submit" class="btn-modern btn-blue">
-                    <i class="ph ph-floppy-disk" style="font-size:1.2rem;"></i> Simpan Transaksi
-                </button>
+                <div class="input-group"><i class="ph ph-calendar-blank input-icon"></i><input type="datetime-local" class="modern-input" id="daily-date" required></div>
+                <div class="input-group"><i class="ph ph-tag input-icon"></i><input type="text" class="modern-input" id="daily-desc" placeholder="Keperluan (Cth: Bensin)" required></div>
+                <div class="input-group"><i class="ph ph-wallet input-icon"></i><input type="number" class="modern-input" id="daily-amount" placeholder="Nominal (Rp)" required></div>
+                <button type="submit" id="btn-daily-submit" class="btn-modern">Simpan Transaksi</button>
                 <button type="button" id="btn-daily-cancel" class="btn-modern btn-cancel" style="display:none;" onclick="cancelEdit()">Batal</button>
             </form>
         </div>
-
-        <h3 style="margin-top: 25px; font-size:1.1rem;">Riwayat Transaksi</h3>
+        <h3 style="margin-top: 25px; font-size:1.1rem;">Riwayat</h3>
         <div class="asset-list-container" style="padding: 0;">
             <table id="table-daily" class="transaction-table"></table>
         </div>
@@ -435,68 +528,44 @@
     </div>
 
     <div id="tab-wishlist" class="container tab-content">
-        <div class="wishlist-total-header">
+        <div style="background: var(--primary); color: white; padding: 20px; border-radius: 20px; text-align: center; margin-bottom: 20px; box-shadow: 0 8px 20px -5px rgba(0,0,0,0.3);">
             <div style="font-size: 0.8rem; opacity: 0.9; margin-bottom: 5px; font-weight: 600;">TOTAL WISHLIST (<span id="wishlist-type-label">SEMENTARA</span>)</div>
             <div id="wishlist-total-display" style="font-size: 1.8rem; font-weight: 800;">Rp 0</div>
         </div>
-
-        <div class="wishlist-toggle">
-            <button class="wishlist-tab active" onclick="setWishlistType('temp')" id="tab-wl-temp">Sementara</button>
-            <button class="wishlist-tab" onclick="setWishlistType('perm')" id="tab-wl-perm">Permanen</button>
+        <div style="display: flex; background: var(--border-color); border-radius: 12px; padding: 4px; margin-bottom: 20px;">
+            <button class="nav-item active" style="padding:10px; border-radius:10px; flex:1;" onclick="setWishlistType('temp')" id="tab-wl-temp">Sementara</button>
+            <button class="nav-item" style="padding:10px; border-radius:10px; flex:1;" onclick="setWishlistType('perm')" id="tab-wl-perm">Permanen</button>
         </div>
-
         <div class="modern-card">
             <form id="form-wishlist">
-                <div class="input-group">
-                    <i class="ph ph-star input-icon"></i>
-                    <input type="text" id="wish-name" class="modern-input" placeholder="Nama Barang" required>
-                </div>
-                <div class="input-group">
-                    <i class="ph ph-tag input-icon"></i>
-                    <input type="number" id="wish-price" class="modern-input" placeholder="Harga (Rp)" required>
-                </div>
-                <button type="submit" id="btn-wish-submit" class="btn-modern btn-blue" style="background: linear-gradient(135deg, #0ea5e9, #0284c7);">
-                    <i class="ph ph-plus-circle" style="font-size:1.2rem;"></i> Tambah Keinginan
-                </button>
+                <div class="input-group"><i class="ph ph-star input-icon"></i><input type="text" id="wish-name" class="modern-input" placeholder="Nama Barang" required></div>
+                <div class="input-group"><i class="ph ph-tag input-icon"></i><input type="number" id="wish-price" class="modern-input" placeholder="Harga (Rp)" required></div>
+                <button type="submit" id="btn-wish-submit" class="btn-modern">Tambah Keinginan</button>
                 <button type="button" id="btn-wish-cancel" class="btn-modern btn-cancel" style="display:none;" onclick="cancelWishEdit()">Batal</button>
             </form>
         </div>
-
         <div class="asset-list-container" style="padding: 0;">
             <table id="table-wishlist" class="transaction-table"></table>
         </div>
     </div>
 
     <div id="tab-hidden" class="container tab-content">
-        <div class="section-title" style="color: #7e22ce;">
-            <span>👁️ Aset Tersembunyi</span>
-        </div>
-        <p style="font-size:0.85rem; color:#94a3b8; margin-bottom:20px;">Aset ini menambah Total Kekayaan Bersih saat tab ini aktif.</p>
-
-        <div class="modern-card" style="border: 1px solid #e9d5ff;">
+        <div class="section-title" style="color: #7e22ce;"><span>👁️ Aset Tersembunyi</span></div>
+        <div class="modern-card" style="border: 1px solid #9333ea;">
             <form id="form-hidden">
-                <div class="input-group">
-                    <i class="ph ph-eye-slash input-icon"></i>
-                    <input type="text" id="hide-name" class="modern-input" placeholder="Nama Aset (Cth: Gaji Google)" required>
-                </div>
-                <div class="input-group">
-                    <i class="ph ph-money input-icon"></i>
-                    <input type="number" id="hide-amount" class="modern-input" placeholder="Nominal (Rp)" required>
-                </div>
-                <button type="submit" id="btn-hide-submit" class="btn-modern btn-purple">
-                    <i class="ph ph-plus-circle" style="font-size:1.2rem;"></i> Tambah Aset
-                </button>
+                <div class="input-group"><i class="ph ph-eye-slash input-icon"></i><input type="text" id="hide-name" class="modern-input" placeholder="Nama Aset" required></div>
+                <div class="input-group"><i class="ph ph-money input-icon"></i><input type="number" id="hide-amount" class="modern-input" placeholder="Nominal" required></div>
+                <button type="submit" id="btn-hide-submit" class="btn-modern" style="background: #9333ea;">Tambah Aset</button>
                 <button type="button" id="btn-hide-cancel" class="btn-modern btn-cancel" style="display:none;" onclick="cancelHideEdit()">Batal</button>
             </form>
         </div>
-
         <div class="asset-list-container" style="padding: 0;">
             <table id="table-hidden" class="transaction-table"></table>
         </div>
     </div>
 
     <nav class="bottom-nav" id="main-nav">
-        <button class="nav-item active" onclick="switchTab('home', this); handleHomeClick();">
+        <button class="nav-item active" onclick="switchTab('home', this)">
             <i class="ph ph-house nav-icon"></i><span class="nav-text">Home</span>
         </button>
         <button class="nav-item" onclick="switchTab('assets', this)">
@@ -514,7 +583,7 @@
         <button class="nav-item" onclick="switchTab('wishlist', this)">
             <i class="ph ph-star nav-icon"></i><span class="nav-text">Wish</span>
         </button>
-        <button class="nav-item" id="nav-hidden-btn" onclick="switchTab('hidden', this)" style="display:none;">
+        <button class="nav-item secret-element" id="nav-hidden-btn" onclick="switchTab('hidden', this)">
             <i class="ph ph-eye nav-icon"></i><span class="nav-text">Hide</span>
         </button>
     </nav>
@@ -551,13 +620,70 @@
     let editingType = null;
     let currentWishlistType = 'temp'; 
 
-    // Hidden Assets Logic
-    let hiddenAssetsVisible = false;
-    let homeClickCount = 0;
-    let homeClickTimer;
+    // --- SECRET & THEME LOGIC ---
+    let netWorthClickCount = 0;
+    let netWorthClickTimer;
+    let isSecretMode = false;
 
-    // Emergency Fund Logic (XRP)
-    let isEmergencyFundIncluded = false; // Default: TIDAK DIHITUNG
+    // Load Theme on Start
+    const savedTheme = localStorage.getItem('appTheme') || 'default';
+    document.body.setAttribute('data-theme', savedTheme);
+
+    function setTheme(themeName) {
+        document.body.setAttribute('data-theme', themeName);
+        localStorage.setItem('appTheme', themeName);
+        showToast("Tema: " + themeName.toUpperCase());
+        document.getElementById('theme-modal').style.display='none';
+    }
+
+    function closeThemeModal(e) {
+        if(e.target.id === 'theme-modal') e.target.style.display = 'none';
+    }
+
+    // Secret Activation Logic (6 Clicks on Net Worth Card)
+    document.getElementById('card-networth').addEventListener('click', function() {
+        clearTimeout(netWorthClickTimer);
+        netWorthClickCount++;
+        
+        if (netWorthClickCount === 6) {
+            toggleSecretMode();
+            netWorthClickCount = 0;
+        }
+        
+        netWorthClickTimer = setTimeout(() => { netWorthClickCount = 0; }, 800);
+    });
+
+    function toggleSecretMode() {
+        isSecretMode = !isSecretMode;
+        const elements = document.querySelectorAll('.secret-element');
+        
+        elements.forEach(el => {
+            if (isSecretMode) {
+                if(el.tagName === 'DIV') el.classList.add('revealed-block'); // For blocks
+                else el.classList.add('revealed'); // For Flex items
+            } else {
+                el.classList.remove('revealed', 'revealed-block');
+            }
+        });
+
+        if (isSecretMode) {
+            showToast("🔓 Private Mode: UNLOCKED");
+        } else {
+            showToast("🔒 Private Mode: LOCKED");
+            // Switch back to home if currently on hidden tab
+            if(document.getElementById('tab-hidden').classList.contains('active')) {
+                switchTab('home', document.querySelector('.nav-item.active'));
+            }
+        }
+        calcAll();
+    }
+
+    function showToast(message) {
+        const toast = document.getElementById('toast');
+        toast.innerText = message;
+        toast.classList.add('show');
+        setTimeout(() => { toast.classList.remove('show'); }, 2000);
+    }
 
     function init() {
         const statusEl = document.getElementById('sync-status');
@@ -570,8 +696,6 @@
                 data.wishlist_temp = val.wishlist_temp ? Object.values(val.wishlist_temp) : [];
                 data.wishlist_perm = val.wishlist_perm ? Object.values(val.wishlist_perm) : [];
                 data.hidden_assets = val.hidden_assets ? Object.values(val.hidden_assets) : [];
-
-                statusEl.innerText = "Data Sinkron (Online)"; statusEl.style.background = "#10b981";
                 
                 if (document.querySelectorAll('.asset-input-small:not([disabled]), .xrp-field:not([disabled])').length === 0) {
                     populateInputs();
@@ -580,24 +704,31 @@
                 renderDebt(); renderDaily(); renderMonthly(); 
                 renderWishlist(); renderHiddenAssetsTable();
                 calcAll(); 
-            } else { statusEl.innerText = "Menunggu data..."; }
+            }
         });
         resetDailyForm();
         fetchXRP();
         setInterval(fetchXRP, 30000);
     }
 
-    function getVal(id) { return parseFloat(document.getElementById(id).value) || 0; }
+    function getVal(id) { 
+        const el = document.getElementById(id);
+        if(!el) return 0;
+        return parseFloat(el.value) || 0; 
+    }
 
     function toggleEditMode(section, isEditing) {
-        const inputs = document.querySelectorAll(section === 'xrp' ? '.xrp-input' : (section === 'fixed' ? '.fixed-input' : '.assets-input'));
+        let selector = '.assets-input';
+        if(section === 'xrp') selector = '.xrp-input';
+        if(section === 'fixed') selector = '.fixed-input';
+        
+        const inputs = document.querySelectorAll(selector);
         const btnEdit = document.getElementById(`btn-edit-${section}`);
         const btnSave = document.getElementById(`btn-save-${section}`);
         
         if (isEditing) {
             inputs.forEach(el => el.disabled = false);
             btnEdit.style.display = 'none'; btnSave.style.display = 'flex';
-            if(inputs.length > 0) inputs[0].focus();
         } else {
             inputs.forEach(el => el.disabled = true);
             btnEdit.style.display = 'flex'; btnSave.style.display = 'none';
@@ -614,6 +745,7 @@
         }
         db.ref('financeData').set(data);
         toggleEditMode(section, false);
+        showToast("Data Tersimpan!");
         calcAll(); 
     }
 
@@ -628,63 +760,14 @@
         });
     }
 
-    // --- LOGIC HIDDEN ASSETS ---
-    function handleHomeClick() {
-        clearTimeout(homeClickTimer);
-        homeClickCount++;
-        if (homeClickCount === 5) {
-            toggleHiddenAssets();
-            homeClickCount = 0;
-        }
-        homeClickTimer = setTimeout(() => { homeClickCount = 0; }, 1000);
-    }
-
-    function toggleHiddenAssets() {
-        hiddenAssetsVisible = !hiddenAssetsVisible;
-        const navBtn = document.getElementById('nav-hidden-btn');
-        const navContainer = document.getElementById('main-nav');
-        
-        if (hiddenAssetsVisible) {
-            navBtn.style.display = 'flex';
-            navContainer.classList.add('has-hidden');
-            alert('Aset Hidden Aktif!');
-        } else {
-            navBtn.style.display = 'none';
-            navContainer.classList.remove('has-hidden');
-            if(document.getElementById('tab-hidden').classList.contains('active')) {
-                switchTab('home', document.querySelector('.nav-item.active')); 
-            }
-            alert('Aset Hidden Non-Aktif!');
-        }
-        calcAll();
-    }
-
-    // --- LOGIC TOGGLE EMERGENCY FUND (XRP) ---
-    function toggleEmergencyFund() {
-        isEmergencyFundIncluded = !isEmergencyFundIncluded;
-        const card = document.getElementById('card-emergency');
-        
-        if(isEmergencyFundIncluded) {
-            card.classList.add('active-fund');
-        } else {
-            card.classList.remove('active-fund');
-        }
-        calcAll();
-    }
-
-    // --- CALCULATION ---
     function calcAll() {
         const i = data.inputs;
-        // Total Cash hanya Wallet & Bank
         const totalCash = (i.cash_wallet||0) + i.bca + i.blu + i.neo + i.rumah + i.shopee + i.gopay;
-        // Total Gaji dipisah
         const totalGaji = i.gaji1 + i.gaji2;
-        
         const totalDebt = data.debts.reduce((a,b) => a + b.amount, 0);
         const totalXrpIDR = (i.xrp_aldi + i.xrp_susi) * xrpPrice;
         const totalFixed = (i.fixed_ibuk||0) + (i.fixed_bapak||0) + (i.fixed_adik||0) + (i.fixed_wifi||0);
         const totalExpDaily = data.expenses.reduce((a,b) => a + b.amount, 0);
-        
         const totalWishTemp = data.wishlist_temp.reduce((a,b) => a + b.price, 0);
         const totalWishPerm = data.wishlist_perm.reduce((a,b) => a + b.price, 0);
 
@@ -692,42 +775,37 @@
         const hiddenContainer = document.getElementById('hidden-assets-cards');
         hiddenContainer.innerHTML = ''; 
 
-        if (hiddenAssetsVisible) {
+        // Only calculate hidden if secret mode is active
+        if (isSecretMode) {
             totalHidden = data.hidden_assets.reduce((a,b) => a + b.amount, 0);
             data.hidden_assets.forEach(h => {
                 hiddenContainer.innerHTML += `
-                    <div class="stat-card hidden-asset-stat">
-                        <div class="stat-label">👁️ ${h.name}</div>
-                        <div class="stat-value">${formatRupiah(h.amount)}</div>
+                    <div class="stat-card hidden-asset-stat" style="border-left: 4px solid #9333ea;">
+                        <div class="stat-label" style="color:#7e22ce;">👁️ ${h.name}</div>
+                        <div class="stat-value" style="color:#6b21a8;">${formatRupiah(h.amount)}</div>
                     </div>
                 `;
             });
         }
 
-        // --- NET WORTH CALCULATION ---
-        // Rumus Dasar: (Uang + Gaji + Piutang + Hidden) - Tetap
-        let netWorth = (totalCash + totalGaji + totalDebt + totalHidden) - totalFixed;
+        let netWorth = (totalCash + totalGaji + totalDebt) - totalFixed;
 
-        // Tambahkan XRP hanya jika diaktifkan (Double Click)
-        if (isEmergencyFundIncluded) {
-            netWorth += totalXrpIDR;
-            document.getElementById('networth-note').innerText = "(Bank + Gaji + Piutang + Dana Darurat) - Tetap";
+        // If secret mode, add XRP and Hidden
+        if (isSecretMode) {
+            netWorth += (totalXrpIDR + totalHidden);
+            document.getElementById('networth-note').innerText = "(Bank + Gaji + Piutang + Hidden + XRP) - Tetap";
         } else {
             document.getElementById('networth-note').innerText = "(Bank + Gaji + Piutang) - Tetap";
         }
 
         document.getElementById('display-networth').innerText = formatRupiah(netWorth);
-        
-        // Update Tampilan Kartu
-        document.getElementById('sum-cash').innerText = formatRupiah(totalCash); // Hanya Bank & Wallet
-        document.getElementById('sum-gaji').innerText = formatRupiah(totalGaji); // Gaji Sendiri
-        
+        document.getElementById('sum-cash').innerText = formatRupiah(totalCash);
+        document.getElementById('sum-gaji').innerText = formatRupiah(totalGaji);
         document.getElementById('sum-xrp').innerText = formatRupiah(totalXrpIDR);
         document.getElementById('sum-debt').innerText = formatRupiah(totalDebt);
         document.getElementById('sum-expense').innerText = formatRupiah(totalExpDaily);
         document.getElementById('sum-fixed').innerText = formatRupiah(totalFixed);
         document.getElementById('total-fixed-display').innerText = formatRupiah(totalFixed);
-        
         document.getElementById('sum-wishlist-temp').innerText = formatRupiah(totalWishTemp);
         document.getElementById('sum-wishlist-perm').innerText = formatRupiah(totalWishPerm);
 
@@ -741,30 +819,28 @@
         updatePnLColor('stat-aldi', currAldi - costAldi);
         const costSusi = (i.xrp_susi||0) * (i.buy_susi||0); const currSusi = (i.xrp_susi||0) * xrpPrice;
         updatePnLColor('stat-susi', currSusi - costSusi);
-        updatePnLColor('stat-total', (currAldi - costAldi) + (currSusi - costSusi));
     }
 
     function updatePnLColor(id, val) {
         const el = document.getElementById(id);
-        if (val > 0) { el.innerText = "+" + formatRupiah(val); el.className = "text-green"; }
-        else if (val < 0) { el.innerText = formatRupiah(val); el.className = "text-red"; }
-        else { el.innerText = "Rp 0"; el.className = "text-gray"; }
+        if (val > 0) { el.innerText = "+" + formatRupiah(val); el.style.color = "#4ade80"; el.style.fontWeight = "bold"; }
+        else if (val < 0) { el.innerText = formatRupiah(val); el.style.color = "#f87171"; el.style.fontWeight = "bold"; }
+        else { el.innerText = "Rp 0"; el.style.color = "var(--text-sub)"; }
     }
 
-    // --- DEBT ---
-    document.getElementById('form-debt').addEventListener('submit', (e) => { e.preventDefault(); data.debts.push({ id: Date.now(), name: document.getElementById('debt-name').value, amount: parseFloat(document.getElementById('debt-amount').value) }); db.ref('financeData').set(data); e.target.reset(); });
+    // CRUD Functions
+    document.getElementById('form-debt').addEventListener('submit', (e) => { e.preventDefault(); data.debts.push({ id: Date.now(), name: document.getElementById('debt-name').value, amount: parseFloat(document.getElementById('debt-amount').value) }); db.ref('financeData').set(data); e.target.reset(); showToast("Hutang Dicatat"); });
     function delDebt(id) { if(confirm('Hapus?')) { data.debts = data.debts.filter(x => x.id !== id); db.ref('financeData').set(data); }}
-    function renderDebt() { const t = document.getElementById('table-debt'); t.innerHTML = ''; data.debts.forEach(d => t.innerHTML += `<tr><td class="t-desc">${d.name}</td><td class="t-amt" style="color:#f59e0b;">${formatRupiah(d.amount)}</td><td style="text-align:right;"><button class="btn-icon del" onclick="delDebt(${d.id})"><i class="ph ph-trash"></i></button></td></tr>`); }
+    function renderDebt() { const t = document.getElementById('table-debt'); t.innerHTML = ''; data.debts.forEach(d => t.innerHTML += `<tr><td class="t-desc">${d.name}</td><td class="t-amt" style="color:#f59e0b;">${formatRupiah(d.amount)}</td><td style="text-align:right;"><button class="btn-pill" style="background:#fee2e2; color:red;" onclick="delDebt(${d.id})"><i class="ph ph-trash"></i></button></td></tr>`); }
 
-    // --- DAILY EXPENSE ---
-    document.getElementById('form-daily').addEventListener('submit', (e) => { e.preventDefault(); const item = { id: editingId || Date.now(), date: document.getElementById('daily-date').value, desc: document.getElementById('daily-desc').value, amount: parseFloat(document.getElementById('daily-amount').value) }; if(editingId) { const idx = data.expenses.findIndex(x => x.id === editingId); if(idx!==-1) data.expenses[idx] = item; } else { data.expenses.push(item); } db.ref('financeData').set(data); resetDailyForm(); });
+    document.getElementById('form-daily').addEventListener('submit', (e) => { e.preventDefault(); const item = { id: editingId || Date.now(), date: document.getElementById('daily-date').value, desc: document.getElementById('daily-desc').value, amount: parseFloat(document.getElementById('daily-amount').value) }; if(editingId) { const idx = data.expenses.findIndex(x => x.id === editingId); if(idx!==-1) data.expenses[idx] = item; } else { data.expenses.push(item); } db.ref('financeData').set(data); resetDailyForm(); showToast("Transaksi Disimpan"); });
     function delDaily(id) { if(confirm('Hapus?')) { data.expenses = data.expenses.filter(x => x.id !== id); db.ref('financeData').set(data); }}
     function renderDaily() { 
         const t = document.getElementById('table-daily'); t.innerHTML = ''; 
         const sorted = [...data.expenses].sort((a,b) => new Date(b.date) - new Date(a.date)); 
         sorted.forEach(e => { 
-            const d = new Date(e.date); const ds = d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' }) + ' ' + d.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }); 
-            t.innerHTML += `<tr><td><span class="t-desc">${e.desc}</span><span class="t-date">${ds}</span></td><td class="t-amt">${formatRupiah(e.amount)}</td><td style="text-align:right; white-space:nowrap;"><button class="btn-icon edit" onclick="startEdit(${e.id}, 'daily')"><i class="ph ph-pencil-simple"></i></button><button class="btn-icon del" onclick="delDaily(${e.id})"><i class="ph ph-trash"></i></button></td></tr>`; 
+            const d = new Date(e.date); const ds = d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
+            t.innerHTML += `<tr><td><span class="t-desc">${e.desc}</span><span style="font-size:0.75rem; color:var(--text-sub);">${ds}</span></td><td class="t-amt">${formatRupiah(e.amount)}</td><td style="text-align:right; white-space:nowrap;"><button class="btn-pill" style="display:inline-flex; margin-right:5px;" onclick="startEdit(${e.id}, 'daily')"><i class="ph ph-pencil-simple"></i></button><button class="btn-pill" style="display:inline-flex; background:#fee2e2; color:red;" onclick="delDaily(${e.id})"><i class="ph ph-trash"></i></button></td></tr>`; 
         }); 
     }
 
@@ -772,26 +848,27 @@
         editingId = id; editingType = type;
         if (type === 'daily') {
             const item = data.expenses.find(x => x.id === id); 
-            if(item) { document.getElementById('daily-date').value = item.date; document.getElementById('daily-desc').value = item.desc; document.getElementById('daily-amount').value = item.amount; const btn = document.getElementById('btn-daily-submit'); btn.innerHTML = '<i class="ph ph-pencil-simple"></i> Update Transaksi'; btn.className = "btn-modern btn-orange"; document.getElementById('btn-daily-cancel').style.display = 'flex'; document.getElementById('form-daily').scrollIntoView({ behavior: 'smooth' }); }
+            if(item) { document.getElementById('daily-date').value = item.date; document.getElementById('daily-desc').value = item.desc; document.getElementById('daily-amount').value = item.amount; const btn = document.getElementById('btn-daily-submit'); btn.innerText = 'Update'; document.getElementById('btn-daily-cancel').style.display = 'flex'; document.getElementById('form-daily').scrollIntoView({ behavior: 'smooth' }); }
         } else if (type === 'wish') {
             const arr = currentWishlistType === 'temp' ? data.wishlist_temp : data.wishlist_perm;
             const item = arr.find(x => x.id === id);
-            if(item) { document.getElementById('wish-name').value = item.name; document.getElementById('wish-price').value = item.price; const btn = document.getElementById('btn-wish-submit'); btn.innerHTML = '<i class="ph ph-pencil-simple"></i> Update Wish'; btn.className = "btn-modern btn-orange"; document.getElementById('btn-wish-cancel').style.display = 'flex'; document.getElementById('form-wishlist').scrollIntoView({ behavior: 'smooth' }); }
+            if(item) { document.getElementById('wish-name').value = item.name; document.getElementById('wish-price').value = item.price; const btn = document.getElementById('btn-wish-submit'); btn.innerText = 'Update'; document.getElementById('btn-wish-cancel').style.display = 'flex'; document.getElementById('form-wishlist').scrollIntoView({ behavior: 'smooth' }); }
         } else if (type === 'hide') {
             const item = data.hidden_assets.find(x => x.id === id);
-            if(item) { document.getElementById('hide-name').value = item.name; document.getElementById('hide-amount').value = item.amount; const btn = document.getElementById('btn-hide-submit'); btn.innerHTML = '<i class="ph ph-pencil-simple"></i> Update Aset'; btn.className = "btn-modern btn-orange"; document.getElementById('btn-hide-cancel').style.display = 'flex'; document.getElementById('form-hidden').scrollIntoView({ behavior: 'smooth' }); }
+            if(item) { document.getElementById('hide-name').value = item.name; document.getElementById('hide-amount').value = item.amount; const btn = document.getElementById('btn-hide-submit'); btn.innerText = 'Update'; document.getElementById('btn-hide-cancel').style.display = 'flex'; document.getElementById('form-hidden').scrollIntoView({ behavior: 'smooth' }); }
         }
     }
 
     function cancelEdit() { resetDailyForm(); }
-    function resetDailyForm() { const now = new Date(); now.setMinutes(now.getMinutes() - now.getTimezoneOffset()); document.getElementById('daily-date').value = now.toISOString().slice(0,16); document.getElementById('daily-desc').value = ''; document.getElementById('daily-amount').value = ''; editingId = null; const btn = document.getElementById('btn-daily-submit'); btn.innerHTML = '<i class="ph ph-floppy-disk"></i> Simpan Transaksi'; btn.className = "btn-modern btn-blue"; document.getElementById('btn-daily-cancel').style.display = 'none'; }
-    function renderMonthly() { const m = {}; data.expenses.forEach(e => { const k = new Date(e.date).toLocaleString('id-ID', { month: 'long', year: 'numeric' }); if(!m[k]) m[k]=0; m[k]+=e.amount; }); const t = document.getElementById('table-monthly'); t.innerHTML = ''; Object.keys(m).forEach(k => t.innerHTML += `<tr><td style="font-weight:600;">${k}</td><td class="t-amt">${formatRupiah(m[k])}</td></tr>`); }
+    function resetDailyForm() { const now = new Date(); now.setMinutes(now.getMinutes() - now.getTimezoneOffset()); document.getElementById('daily-date').value = now.toISOString().slice(0,16); document.getElementById('daily-desc').value = ''; document.getElementById('daily-amount').value = ''; editingId = null; const btn = document.getElementById('btn-daily-submit'); btn.innerText = 'Simpan Transaksi'; document.getElementById('btn-daily-cancel').style.display = 'none'; }
+    function renderMonthly() { const m = {}; data.expenses.forEach(e => { const k = new Date(e.date).toLocaleString('id-ID', { month: 'long', year: 'numeric' }); if(!m[k]) m[k]=0; m[k]+=e.amount; }); const t = document.getElementById('table-monthly'); t.innerHTML = ''; Object.keys(m).forEach(k => t.innerHTML += `<tr><td style="font-weight:600; color:var(--text-main);">${k}</td><td class="t-amt">${formatRupiah(m[k])}</td></tr>`); }
 
-    // --- WISHLIST FUNCTIONS ---
     function setWishlistType(type) {
         currentWishlistType = type;
-        document.getElementById('tab-wl-temp').className = type === 'temp' ? 'wishlist-tab active' : 'wishlist-tab';
-        document.getElementById('tab-wl-perm').className = type === 'perm' ? 'wishlist-tab active' : 'wishlist-tab';
+        document.getElementById('tab-wl-temp').style.background = type === 'temp' ? 'var(--card-bg)' : 'transparent';
+        document.getElementById('tab-wl-temp').style.color = type === 'temp' ? 'var(--primary)' : 'var(--text-sub)';
+        document.getElementById('tab-wl-perm').style.background = type === 'perm' ? 'var(--card-bg)' : 'transparent';
+        document.getElementById('tab-wl-perm').style.color = type === 'perm' ? 'var(--primary)' : 'var(--text-sub)';
         document.getElementById('wishlist-type-label').innerText = type === 'temp' ? 'SEMENTARA' : 'PERMANEN';
         renderWishlist(); cancelWishEdit();
     }
@@ -801,7 +878,7 @@
         const item = { id: editingId || Date.now(), name: document.getElementById('wish-name').value, price: parseFloat(document.getElementById('wish-price').value) };
         const targetArr = currentWishlistType === 'temp' ? 'wishlist_temp' : 'wishlist_perm';
         if (editingId) { const idx = data[targetArr].findIndex(x => x.id === editingId); if(idx !== -1) data[targetArr][idx] = item; } else { data[targetArr].push(item); }
-        db.ref('financeData').set(data); cancelWishEdit();
+        db.ref('financeData').set(data); cancelWishEdit(); showToast("Wishlist Disimpan");
     });
 
     function renderWishlist() {
@@ -809,36 +886,35 @@
         const total = arr.reduce((a,b) => a + b.price, 0);
         document.getElementById('wishlist-total-display').innerText = formatRupiah(total);
         const t = document.getElementById('table-wishlist'); t.innerHTML = '';
-        arr.forEach(d => { t.innerHTML += `<tr><td class="t-desc">${d.name}</td><td class="t-amt" style="color:#0ea5e9;">${formatRupiah(d.price)}</td><td style="text-align:right; white-space:nowrap;"><button class="btn-icon edit" onclick="startEdit(${d.id}, 'wish')"><i class="ph ph-pencil-simple"></i></button><button class="btn-icon del" onclick="delWishlist(${d.id})"><i class="ph ph-trash"></i></button></td></tr>`; });
+        arr.forEach(d => { t.innerHTML += `<tr><td class="t-desc">${d.name}</td><td class="t-amt" style="color:#0ea5e9;">${formatRupiah(d.price)}</td><td style="text-align:right; white-space:nowrap;"><button class="btn-pill" style="display:inline-flex; margin-right:5px;" onclick="startEdit(${d.id}, 'wish')"><i class="ph ph-pencil-simple"></i></button><button class="btn-pill" style="display:inline-flex; background:#fee2e2; color:red;" onclick="delWishlist(${d.id})"><i class="ph ph-trash"></i></button></td></tr>`; });
     }
-
     function delWishlist(id) { if(confirm('Hapus?')) { if(currentWishlistType === 'temp') data.wishlist_temp = data.wishlist_temp.filter(x => x.id !== id); else data.wishlist_perm = data.wishlist_perm.filter(x => x.id !== id); db.ref('financeData').set(data); }}
+    function cancelWishEdit() { document.getElementById('wish-name').value = ''; document.getElementById('wish-price').value = ''; editingId = null; const btn = document.getElementById('btn-wish-submit'); btn.innerText = 'Tambah Keinginan'; document.getElementById('btn-wish-cancel').style.display = 'none'; }
 
-    function cancelWishEdit() { document.getElementById('wish-name').value = ''; document.getElementById('wish-price').value = ''; editingId = null; const btn = document.getElementById('btn-wish-submit'); btn.innerHTML = '<i class="ph ph-plus-circle"></i> Tambah Keinginan'; btn.className = "btn-modern btn-blue"; document.getElementById('btn-wish-cancel').style.display = 'none'; }
-
-    // --- HIDDEN ASSETS FUNCTIONS ---
     document.getElementById('form-hidden').addEventListener('submit', (e) => {
         e.preventDefault();
         const item = { id: editingId || Date.now(), name: document.getElementById('hide-name').value, amount: parseFloat(document.getElementById('hide-amount').value) };
         if (editingId) { const idx = data.hidden_assets.findIndex(x => x.id === editingId); if(idx !== -1) data.hidden_assets[idx] = item; } else { data.hidden_assets.push(item); }
-        db.ref('financeData').set(data); cancelHideEdit();
+        db.ref('financeData').set(data); cancelHideEdit(); showToast("Aset Hidden Disimpan");
     });
-
     function renderHiddenAssetsTable() {
         const t = document.getElementById('table-hidden'); t.innerHTML = '';
-        data.hidden_assets.forEach(d => { t.innerHTML += `<tr><td class="t-desc">${d.name}</td><td class="t-amt" style="color:#9333ea;">${formatRupiah(d.amount)}</td><td style="text-align:right; white-space:nowrap;"><button class="btn-icon edit" onclick="startEdit(${d.id}, 'hide')"><i class="ph ph-pencil-simple"></i></button><button class="btn-icon del" onclick="delHidden(${d.id})"><i class="ph ph-trash"></i></button></td></tr>`; });
+        data.hidden_assets.forEach(d => { t.innerHTML += `<tr><td class="t-desc">${d.name}</td><td class="t-amt" style="color:#9333ea;">${formatRupiah(d.amount)}</td><td style="text-align:right; white-space:nowrap;"><button class="btn-pill" style="display:inline-flex; margin-right:5px;" onclick="startEdit(${d.id}, 'hide')"><i class="ph ph-pencil-simple"></i></button><button class="btn-pill" style="display:inline-flex; background:#fee2e2; color:red;" onclick="delHidden(${d.id})"><i class="ph ph-trash"></i></button></td></tr>`; });
     }
-
     function delHidden(id) { if(confirm('Hapus aset?')) { data.hidden_assets = data.hidden_assets.filter(x => x.id !== id); db.ref('financeData').set(data); }}
-
-    function cancelHideEdit() { document.getElementById('hide-name').value = ''; document.getElementById('hide-amount').value = ''; editingId = null; const btn = document.getElementById('btn-hide-submit'); btn.innerHTML = '<i class="ph ph-plus-circle"></i> Tambah Aset'; btn.className = "btn-modern btn-purple"; document.getElementById('btn-hide-cancel').style.display = 'none'; }
+    function cancelHideEdit() { document.getElementById('hide-name').value = ''; document.getElementById('hide-amount').value = ''; editingId = null; const btn = document.getElementById('btn-hide-submit'); btn.innerText = 'Tambah Aset'; document.getElementById('btn-hide-cancel').style.display = 'none'; }
 
     async function fetchXRP() {
         try { const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=ripple&vs_currencies=idr'); const json = await res.json(); if(json.ripple && json.ripple.idr) { xrpPrice = json.ripple.idr; document.getElementById('xrp-live-price').innerText = formatRupiah(xrpPrice); document.getElementById('xrp-live-price').style.color = "#10b981"; calcAll(); return; } } catch(e) {}
         try { const res = await fetch('https://api.coinpaprika.com/v1/tickers/xrp-xrp?quotes=IDR'); const json = await res.json(); if(json.quotes && json.quotes.IDR && json.quotes.IDR.price) { xrpPrice = json.quotes.IDR.price; document.getElementById('xrp-live-price').innerText = formatRupiah(xrpPrice); document.getElementById('xrp-live-price').style.color = "#10b981"; calcAll(); return; } } catch(e) { document.getElementById('xrp-live-price').innerText = "Gagal Load"; }
     }
 
-    function switchTab(name, btn) { document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active')); document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active')); document.getElementById('tab-' + name).classList.add('active'); btn.classList.add('active'); window.scrollTo(0,0); }
+    function switchTab(name, btn) { 
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active')); 
+        document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active')); 
+        document.getElementById('tab-' + name).classList.add('active'); 
+        btn.classList.add('active'); window.scrollTo(0,0); 
+    }
 
     init();
 </script>
