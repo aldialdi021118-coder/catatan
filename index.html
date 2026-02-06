@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Keuangan Pro V34 (Fixed Layout)</title>
+    <title>Keuangan Pro V37 (Final Full)</title>
     
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
@@ -12,9 +12,9 @@
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
 
     <style>
-        /* --- THEME VARIABLES --- */
+        /* --- THEME VARIABLES (10 TEMA) --- */
         :root {
-            /* Default Theme */
+            /* 1. Default (Modern Blue) */
             --bg-body: #f1f5f9; --card-bg: #ffffff; --text-main: #0f172a; --text-sub: #64748b;
             --primary: #3b82f6; --primary-grad: linear-gradient(135deg, #3b82f6, #2563eb);
             --card-grad: linear-gradient(135deg, #0f172a, #1e293b); --input-bg: #f8fafc; --border-color: #e2e8f0;
@@ -68,23 +68,14 @@
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        html, body {
-            width: 100%;
-            overflow-x: hidden; /* Mencegah geser kanan/kiri */
-        }
+        html, body { width: 100%; overflow-x: hidden; }
         body {
             font-family: var(--font-main); background-color: var(--bg-body);
             margin: 0; padding: 0; color: var(--text-main); padding-bottom: 110px;
             transition: background-color 0.5s ease, color 0.5s ease; user-select: none;
         }
 
-        .container { 
-            width: 100%; 
-            padding: 20px; 
-            margin: 0 auto; 
-            box-sizing: border-box;
-        }
-        
+        .container { width: 100%; padding: 20px; margin: 0 auto; box-sizing: border-box; }
         @media (min-width: 768px) {
             .container { max-width: 1000px; padding: 40px; }
             .dashboard-grid { grid-template-columns: repeat(4, 1fr) !important; }
@@ -99,55 +90,36 @@
         }
         .main-card:active { transform: scale(0.98); }
         .net-worth-label { font-size: 0.8rem; letter-spacing: 1px; opacity: 0.8; text-transform: uppercase; margin-bottom: 8px; font-weight: 600; }
-        
-        /* FIX: Dynamic Font Size for Net Worth to prevent overflow */
         .net-worth-value { 
             font-size: clamp(1.8rem, 8vw, 3.2rem); 
             font-weight: 800; margin: 5px 0; 
             letter-spacing: -1px; line-height: 1.1; 
-            word-wrap: break-word; 
-            overflow-wrap: anywhere; /* Memaksa angka panjang turun baris */
+            word-wrap: break-word; overflow-wrap: anywhere; 
         }
 
-        /* FIX: Dashboard Grid System - Tegas & Lurus */
-        .dashboard-grid { 
-            display: grid; 
-            grid-template-columns: 1fr 1fr; /* Pasti 2 kolom */
-            gap: 12px; 
-            margin-bottom: 30px; 
-            width: 100%;
-        }
-        
-        /* Grid item spanning full width on mobile */
+        .dashboard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 30px; width: 100%; }
         .dashboard-grid .full-width-mobile { grid-column: 1 / -1; }
         @media (min-width: 768px) { .dashboard-grid .full-width-mobile { grid-column: span 1; } }
 
         .stat-card {
-            background: var(--card-bg); padding: 15px; border-radius: var(--radius);
+            background: var(--card-bg); padding: 12px 8px; border-radius: var(--radius);
             box-shadow: var(--shadow-card); border: 1px solid var(--border-color);
-            display: flex; flex-direction: column; justify-content: center; 
-            transition: all 0.3s ease;
-            height: 100%; /* Memaksa tinggi sama rata */
-            min-width: 0; /* Mencegah overflow flex item */
-            overflow: hidden; /* Potong konten berlebih */
+            display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;
+            height: 100%; min-width: 0; overflow: hidden; transition: all 0.3s ease;
         }
         
         .stat-label { 
-            font-size: 0.7rem; color: var(--text-sub); font-weight: 600; 
-            margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;
-            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+            font-size: 0.65rem; color: var(--text-sub); font-weight: 600; margin-bottom: 6px; 
+            text-transform: uppercase; letter-spacing: 0.5px;
+            white-space: normal; overflow: visible; line-height: 1.2; width: 100%;
         }
         
-        /* FIX: Angka dalam kartu agar tidak bablas ke kanan */
         .stat-value { 
-            font-size: clamp(0.9rem, 4vw, 1.1rem); /* Font dinamis */
-            font-weight: 700; color: var(--text-main);
-            word-break: break-word; /* Potong kata/angka */
-            overflow-wrap: anywhere; /* Paksa turun baris */
-            line-height: 1.2;
+            font-size: clamp(0.75rem, 3.8vw, 1.1rem); font-weight: 700; color: var(--text-main);
+            line-height: 1.2; white-space: normal; word-wrap: break-word; overflow-wrap: anywhere; width: 100%;
         }
         
-        /* --- SECRET ELEMENTS CSS --- */
+        /* --- SECRET ELEMENTS --- */
         .secret-xrp { display: none !important; animation: fadeIn 0.5s; }
         .secret-hidden { display: none !important; animation: fadeIn 0.5s; }
         .show-xrp { display: flex !important; }
@@ -199,8 +171,7 @@
         }
         .nav-item { 
             border: none; background: none; display: flex; flex-direction: column; align-items: center; justify-content: center;
-            color: var(--text-sub); cursor: pointer; font-weight: 600; flex: 1; transition: 0.2s;
-            min-width: 0; /* Mencegah overflow tombol */
+            color: var(--text-sub); cursor: pointer; font-weight: 600; flex: 1; transition: 0.2s; min-width: 0;
         }
         .nav-item:active { transform: scale(0.9); }
         .nav-item.active { color: var(--primary); }
@@ -240,10 +211,27 @@
         .btn-pill.edit { background: var(--bg-body); color: var(--text-main); border: 1px solid var(--border-color); }
         .btn-pill.save { background: var(--primary); color: white; display: none; }
         
-        .transaction-table { width: 100%; border-collapse: collapse; table-layout: fixed; /* Memaksa kolom tabel patuh lebar */ }
-        .transaction-table td { padding: 16px 12px; border-bottom: 1px solid var(--border-color); vertical-align: middle; }
-        .t-desc { font-weight: 600; display: block; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 60vw; }
+        /* --- TABEL TRANSAKSI & WISHLIST (FIXED & SIMETRIS) --- */
+        .transaction-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+        .transaction-table td { padding: 16px 8px; border-bottom: 1px solid var(--border-color); vertical-align: middle; }
+        
+        /* Lebar Kolom Khusus Wishlist agar Simetris */
+        .col-name { width: 40%; text-align: left; }
+        .col-price { width: 35%; text-align: center; }
+        .col-action { width: 25%; text-align: right; }
+
+        .t-desc { 
+            font-weight: 600; display: block; color: var(--text-main); 
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis; 
+            font-size: 0.9rem;
+        }
         .t-amt { text-align: right; font-weight: 700; color: #ef4444; font-size: 0.9rem; white-space: nowrap; }
+        
+        /* Angka Wishlist (Biru) */
+        .t-amt-wish { 
+            font-weight: 700; color: #0ea5e9; font-size: 0.9rem; 
+            white-space: normal; word-wrap: break-word; overflow-wrap: anywhere;
+        }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
@@ -254,7 +242,7 @@
 
     <div id="theme-modal" class="theme-modal" onclick="closeThemeModal(event)">
         <div class="theme-content">
-            <h3 style="margin-top:0; color:var(--text-main);">Pilih Tema</h3>
+            <h3 style="margin-top:0; color:var(--text-main); text-align:center;">Pilih Tema</h3>
             <div class="theme-grid">
                 <div class="theme-option" onclick="setTheme('default')" style="background:#f1f5f9; color:#0f172a;">Default</div>
                 <div class="theme-option" onclick="setTheme('dark')" style="background:#0f172a; color:#fff;">Dark Mode</div>
@@ -358,21 +346,28 @@
                 <div style="text-align: center; margin-bottom: 15px; font-size: 0.8rem; color: var(--text-sub); font-weight: 600;">
                     LIVE: <span id="xrp-live-price" style="color: var(--text-main); font-weight: 800;">...</span>
                 </div>
+                
                 <div style="background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 14px; padding: 15px; margin-bottom: 15px;">
-                    <div style="display: flex; align-items: center; margin-bottom: 12px; gap: 10px; border-bottom: 1px dashed var(--border-color); padding-bottom: 8px; font-weight: 600;"><span>Dompet Aldi</span></div>
+                    <div style="display: flex; align-items: center; justify-content:center; margin-bottom: 12px; gap: 10px; border-bottom: 1px dashed var(--border-color); padding-bottom: 8px; font-weight: 600;"><span>Dompet Aldi</span></div>
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 10px;">
                         <div><label style="font-size:0.7rem; color:var(--text-sub);">KOIN</label><input type="number" id="xrp-aldi" class="modern-input xrp-input" style="padding:8px;" placeholder="0.00" step="any" disabled></div>
                         <div><label style="font-size:0.7rem; color:var(--text-sub);">MODAL</label><input type="number" id="buy-aldi" class="modern-input xrp-input" style="padding:8px;" placeholder="0" disabled></div>
                     </div>
                     <div style="display:flex; justify-content:space-between; font-size:0.85rem;"><span>PnL</span><span id="stat-aldi">Rp 0</span></div>
                 </div>
+                
                 <div style="background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 14px; padding: 15px; margin-bottom: 15px;">
-                    <div style="display: flex; align-items: center; margin-bottom: 12px; gap: 10px; border-bottom: 1px dashed var(--border-color); padding-bottom: 8px; font-weight: 600;"><span>Dompet Susilowati</span></div>
+                    <div style="display: flex; align-items: center; justify-content:center; margin-bottom: 12px; gap: 10px; border-bottom: 1px dashed var(--border-color); padding-bottom: 8px; font-weight: 600;"><span>Dompet Susilowati</span></div>
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 10px;">
                         <div><label style="font-size:0.7rem; color:var(--text-sub);">KOIN</label><input type="number" id="xrp-susi" class="modern-input xrp-input" style="padding:8px;" placeholder="0.00" step="any" disabled></div>
                         <div><label style="font-size:0.7rem; color:var(--text-sub);">MODAL</label><input type="number" id="buy-susi" class="modern-input xrp-input" style="padding:8px;" placeholder="0" disabled></div>
                     </div>
                     <div style="display:flex; justify-content:space-between; font-size:0.85rem;"><span>PnL</span><span id="stat-susi">Rp 0</span></div>
+                </div>
+
+                <div style="text-align:center; padding:15px; border-top: 1px dashed var(--border-color); margin-top:10px;">
+                    <div style="font-size:0.7rem; font-weight:700; color:var(--text-sub); margin-bottom:5px; letter-spacing:1px;">TOTAL PROFIT GABUNGAN</div>
+                    <div id="stat-total" style="font-size:1.5rem; font-weight:800; color:var(--text-main);">Rp 0</div>
                 </div>
             </div>
         </div>
@@ -742,11 +737,23 @@
     function calcPnL() {
         if(!xrpPrice) return;
         const i = data.inputs;
-        const costAldi = (i.xrp_aldi||0) * (i.buy_aldi||0); const currAldi = (i.xrp_aldi||0) * xrpPrice;
-        updatePnLColor('stat-aldi', currAldi - costAldi);
-        const costSusi = (i.xrp_susi||0) * (i.buy_susi||0); const currSusi = (i.xrp_susi||0) * xrpPrice;
-        updatePnLColor('stat-susi', currSusi - costSusi);
+        // PnL Aldi
+        const costAldi = (i.xrp_aldi||0) * (i.buy_aldi||0); 
+        const currAldi = (i.xrp_aldi||0) * xrpPrice;
+        const pnlAldi = currAldi - costAldi;
+        updatePnLColor('stat-aldi', pnlAldi);
+
+        // PnL Susi
+        const costSusi = (i.xrp_susi||0) * (i.buy_susi||0); 
+        const currSusi = (i.xrp_susi||0) * xrpPrice;
+        const pnlSusi = currSusi - costSusi;
+        updatePnLColor('stat-susi', pnlSusi);
+
+        // TOTAL GABUNGAN
+        const totalPnL = pnlAldi + pnlSusi;
+        updatePnLColor('stat-total', totalPnL);
     }
+    
     function updatePnLColor(id, val) {
         const el = document.getElementById(id);
         if (val > 0) { el.innerText = "+" + formatRupiah(val); el.style.color = "#4ade80"; el.style.fontWeight = "bold"; }
@@ -783,7 +790,24 @@
         renderWishlist(); cancelWishEdit();
     }
     document.getElementById('form-wishlist').addEventListener('submit', (e) => { e.preventDefault(); const item = { id: editingId || Date.now(), name: document.getElementById('wish-name').value, price: parseFloat(document.getElementById('wish-price').value) }; const targetArr = currentWishlistType === 'temp' ? 'wishlist_temp' : 'wishlist_perm'; if (editingId) { const idx = data[targetArr].findIndex(x => x.id === editingId); if(idx !== -1) data[targetArr][idx] = item; } else { data[targetArr].push(item); } db.ref('financeData').set(data); cancelWishEdit(); showToast("Wishlist Disimpan"); });
-    function renderWishlist() { const arr = currentWishlistType === 'temp' ? data.wishlist_temp : data.wishlist_perm; const total = arr.reduce((a,b) => a + b.price, 0); document.getElementById('wishlist-total-display').innerText = formatRupiah(total); const t = document.getElementById('table-wishlist'); t.innerHTML = ''; arr.forEach(d => { t.innerHTML += `<tr><td class="t-desc">${d.name}</td><td class="t-amt" style="color:#0ea5e9;">${formatRupiah(d.price)}</td><td style="text-align:right; white-space:nowrap;"><button class="btn-pill" style="display:inline-flex; margin-right:5px;" onclick="startEdit(${d.id}, 'wish')"><i class="ph ph-pencil-simple"></i></button><button class="btn-pill" style="display:inline-flex; background:#fee2e2; color:red;" onclick="delWishlist(${d.id})"><i class="ph ph-trash"></i></button></td></tr>`; }); }
+    function renderWishlist() { 
+        const arr = currentWishlistType === 'temp' ? data.wishlist_temp : data.wishlist_perm; 
+        const total = arr.reduce((a,b) => a + b.price, 0); 
+        document.getElementById('wishlist-total-display').innerText = formatRupiah(total); 
+        const t = document.getElementById('table-wishlist'); 
+        t.innerHTML = ''; 
+        arr.forEach(d => { 
+            t.innerHTML += `
+            <tr>
+                <td class="col-name"><span class="t-desc">${d.name}</span></td>
+                <td class="col-price"><span class="t-amt-wish">${formatRupiah(d.price)}</span></td>
+                <td class="col-action">
+                    <button class="btn-pill" style="display:inline-flex; margin-right:5px;" onclick="startEdit(${d.id}, 'wish')"><i class="ph ph-pencil-simple"></i></button>
+                    <button class="btn-pill" style="display:inline-flex; background:#fee2e2; color:red;" onclick="delWishlist(${d.id})"><i class="ph ph-trash"></i></button>
+                </td>
+            </tr>`; 
+        }); 
+    }
     function delWishlist(id) { if(confirm('Hapus?')) { if(currentWishlistType === 'temp') data.wishlist_temp = data.wishlist_temp.filter(x => x.id !== id); else data.wishlist_perm = data.wishlist_perm.filter(x => x.id !== id); db.ref('financeData').set(data); }}
     function cancelWishEdit() { document.getElementById('wish-name').value = ''; document.getElementById('wish-price').value = ''; editingId = null; const btn = document.getElementById('btn-wish-submit'); btn.innerText = 'Tambah Keinginan'; document.getElementById('btn-wish-cancel').style.display = 'none'; }
 
