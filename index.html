@@ -234,6 +234,50 @@
         }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- ACCORDION LAPORAN BULANAN --- */
+        .accordion-item {
+            border-bottom: 1px solid var(--border-color);
+            overflow: hidden;
+        }
+        .accordion-item:last-child { border-bottom: none; }
+        .accordion-header {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 16px 20px; cursor: pointer; background: var(--card-bg);
+            transition: background 0.2s; gap: 10px;
+            user-select: none;
+        }
+        .accordion-header:active { background: var(--input-bg); }
+        .accordion-month { font-weight: 700; font-size: 0.95rem; color: var(--text-main); flex: 1; }
+        .accordion-total { font-weight: 800; color: #ef4444; font-size: 0.9rem; white-space: nowrap; }
+        .accordion-icon {
+            font-size: 1.1rem; color: var(--text-sub);
+            transition: transform 0.3s ease; flex-shrink: 0;
+        }
+        .accordion-icon.open { transform: rotate(180deg); }
+        .accordion-body {
+            display: none; background: var(--input-bg);
+            border-top: 1px solid var(--border-color);
+            animation: fadeIn 0.2s ease;
+        }
+        .accordion-body.open { display: block; }
+        .accordion-summary {
+            padding: 10px 20px; background: var(--primary-grad);
+            color: white; font-size: 0.8rem; font-weight: 700;
+            display: flex; justify-content: space-between; letter-spacing: 0.5px;
+        }
+        .btn-kirim {
+            width: 100%; border: none; padding: 14px; border-radius: 14px;
+            font-size: 0.95rem; font-weight: 700; color: white; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1); margin-top: 15px;
+        }
+        .btn-kirim:active { transform: scale(0.98); }
+        .empty-monthly {
+            text-align: center; color: var(--text-sub); padding: 40px 20px;
+            font-size: 0.9rem; font-weight: 600;
+        }
     </style>
 </head>
 <body>
@@ -416,15 +460,18 @@
             </form>
         </div>
         <h3 style="margin-top: 25px; font-size:1.1rem;">Riwayat</h3>
-        <div class="asset-list-container" style="padding: 0;">
+        <button class="btn-kirim" onclick="sendToMonthly()">
+            <i class="ph ph-paper-plane-tilt"></i> Kirim ke Laporan Bulanan
+        </button>
+        <div class="asset-list-container" style="padding: 0; margin-top: 15px;">
             <table id="table-daily" class="transaction-table"></table>
         </div>
     </div>
 
     <div id="tab-monthly" class="container tab-content">
-        <div class="section-title">Laporan Bulanan</div>
+        <div class="section-title">📅 Laporan Bulanan</div>
         <div class="asset-list-container" style="padding: 0;">
-            <table id="table-monthly" class="transaction-table"></table>
+            <div id="table-monthly"></div>
         </div>
     </div>
 
@@ -514,7 +561,8 @@
             cash_wallet: 0
         },
         debts: [], expenses: [],
-        wishlist_temp: [], wishlist_perm: [], hidden_assets: []
+        wishlist_temp: [], wishlist_perm: [], hidden_assets: [],
+        monthly_reports: {}
     };
     let xrpPrice = 0;
     let editingId = null;
@@ -632,6 +680,7 @@
                 data.wishlist_temp = val.wishlist_temp ? Object.values(val.wishlist_temp) : [];
                 data.wishlist_perm = val.wishlist_perm ? Object.values(val.wishlist_perm) : [];
                 data.hidden_assets = val.hidden_assets ? Object.values(val.hidden_assets) : [];
+                data.monthly_reports = val.monthly_reports ? val.monthly_reports : {};
                 
                 if (document.querySelectorAll('.asset-input-small:not([disabled]), .xrp-field:not([disabled])').length === 0) {
                     populateInputs();
@@ -639,7 +688,8 @@
                 
                 renderDebt(); renderDaily(); renderMonthly(); 
                 renderWishlist(); renderHiddenAssetsTable();
-                calcAll(); 
+                calcAll();
+                checkAutoTransfer();
             }
         });
         resetDailyForm();
@@ -778,7 +828,109 @@
     }
     function cancelEdit() { resetDailyForm(); }
     function resetDailyForm() { const now = new Date(); now.setMinutes(now.getMinutes() - now.getTimezoneOffset()); document.getElementById('daily-date').value = now.toISOString().slice(0,16); document.getElementById('daily-desc').value = ''; document.getElementById('daily-amount').value = ''; editingId = null; const btn = document.getElementById('btn-daily-submit'); btn.innerText = 'Simpan Transaksi'; document.getElementById('btn-daily-cancel').style.display = 'none'; }
-    function renderMonthly() { const m = {}; data.expenses.forEach(e => { const k = new Date(e.date).toLocaleString('id-ID', { month: 'long', year: 'numeric' }); if(!m[k]) m[k]=0; m[k]+=e.amount; }); const t = document.getElementById('table-monthly'); t.innerHTML = ''; Object.keys(m).forEach(k => t.innerHTML += `<tr><td style="font-weight:600; color:var(--text-main);">${k}</td><td class="t-amt">${formatRupiah(m[k])}</td></tr>`); }
+    function renderMonthly() {
+        const container = document.getElementById('table-monthly');
+        const reports = data.monthly_reports || {};
+        const keys = Object.keys(reports);
+
+        if (keys.length === 0) {
+            container.innerHTML = `<div class="empty-monthly">📭 Belum ada laporan bulanan.<br>Kirim riwayat harian dulu!</div>`;
+            return;
+        }
+
+        // Sort: parse key like "Januari 2025" for sorting
+        const monthOrder = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+        keys.sort((a, b) => {
+            const [mA, yA] = a.split(' '); const [mB, yB] = b.split(' ');
+            if (yB !== yA) return parseInt(yB) - parseInt(yA);
+            return monthOrder.indexOf(mB) - monthOrder.indexOf(mA);
+        });
+
+        container.innerHTML = keys.map((monthKey, idx) => {
+            const items = reports[monthKey] || [];
+            const total = items.reduce((s, e) => s + (e.amount || 0), 0);
+            const sortedItems = [...items].sort((a,b) => new Date(b.date) - new Date(a.date));
+            const rows = sortedItems.map(e => {
+                const d = new Date(e.date);
+                const ds = d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
+                return `<tr>
+                    <td style="padding:12px 20px;">
+                        <span class="t-desc">${e.desc}</span>
+                        <span style="font-size:0.75rem; color:var(--text-sub); display:block;">${ds}</span>
+                    </td>
+                    <td class="t-amt" style="padding:12px 20px; text-align:right;">${formatRupiah(e.amount)}</td>
+                </tr>`;
+            }).join('');
+
+            return `
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <span class="accordion-month">📅 ${monthKey}</span>
+                    <span class="accordion-total">${formatRupiah(total)}</span>
+                    <i class="ph ph-caret-down accordion-icon"></i>
+                </div>
+                <div class="accordion-body">
+                    <div class="accordion-summary">
+                        <span>${items.length} TRANSAKSI</span>
+                        <span>TOTAL: ${formatRupiah(total)}</span>
+                    </div>
+                    <table class="transaction-table" style="width:100%;">${rows}</table>
+                </div>
+            </div>`;
+        }).join('');
+    }
+
+    function toggleAccordion(header) {
+        const body = header.nextElementSibling;
+        const icon = header.querySelector('.accordion-icon');
+        const isOpen = body.classList.contains('open');
+        body.classList.toggle('open', !isOpen);
+        icon.classList.toggle('open', !isOpen);
+    }
+
+    function sendToMonthly(auto = false) {
+        if (data.expenses.length === 0) {
+            if (!auto) showToast("❌ Tidak ada riwayat harian!");
+            return;
+        }
+
+        if (!auto && !confirm('Kirim semua riwayat harian ke Laporan Bulanan?\nRiwayat harian akan dikosongkan.')) return;
+
+        if (!data.monthly_reports) data.monthly_reports = {};
+
+        // Group by month
+        data.expenses.forEach(e => {
+            const d = new Date(e.date);
+            const key = d.toLocaleString('id-ID', { month: 'long', year: 'numeric' });
+            if (!data.monthly_reports[key]) data.monthly_reports[key] = [];
+            data.monthly_reports[key].push(e);
+        });
+
+        data.expenses = [];
+        db.ref('financeData').set(data);
+        showToast(auto ? "📅 Riwayat otomatis dikirim ke Laporan Bulanan!" : "✅ Riwayat dikirim ke Laporan Bulanan!");
+    }
+
+    function checkAutoTransfer() {
+        const now = new Date();
+        if (now.getDate() !== 1) return;
+        if (data.expenses.length === 0) return;
+
+        const autoKey = `autoTransfer_${now.getFullYear()}_${now.getMonth() + 1}`;
+        if (localStorage.getItem(autoKey)) return;
+
+        // Only transfer expenses from previous month
+        const currKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+        const hasOld = data.expenses.some(e => {
+            const d = new Date(e.date);
+            return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}` !== currKey;
+        });
+
+        if (hasOld) {
+            localStorage.setItem(autoKey, '1');
+            sendToMonthly(true);
+        }
+    }
 
     function setWishlistType(type) {
         currentWishlistType = type;
