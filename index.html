@@ -469,26 +469,33 @@
 
         /* --- TICKER / NOTIF BERJALAN --- */
         .ticker-wrapper {
-            width: 100%; overflow: hidden; background: var(--card-bg);
+            width: 100%; background: var(--card-bg);
             border: 1px solid var(--border-color); border-radius: 10px;
-            padding: 8px 0; margin-bottom: 16px; position: relative;
+            padding: 10px 14px; margin-bottom: 16px; position: relative;
+            display: flex; align-items: center; gap: 10px; min-height: 44px;
         }
         .ticker-track {
-            display: flex; gap: 40px; white-space: nowrap;
-            animation: ticker-scroll 30s linear infinite;
+            flex: 1; position: relative; min-height: 24px; overflow: hidden;
         }
-        .ticker-track:hover { animation-play-state: paused; }
         .ticker-item {
-            font-size: 0.8rem; font-weight: 700; flex-shrink: 0;
+            font-size: 0.8rem; font-weight: 700;
             display: flex; align-items: center; gap: 6px;
+            position: absolute; top: 0; left: 0; right: 0;
+            opacity: 0; transform: translateY(8px);
+            transition: opacity 0.4s ease, transform 0.4s ease;
         }
+        .ticker-item.show { opacity: 1; transform: translateY(0); }
         .ticker-up { color: #10b981; }
         .ticker-down { color: #ef4444; }
         .ticker-neutral { color: var(--text-sub); }
-        @keyframes ticker-scroll {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
+        .ticker-tts-btn {
+            flex-shrink: 0; border: none; background: var(--primary-grad);
+            color: white; width: 34px; height: 34px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.1rem; cursor: pointer; transition: transform 0.2s, background 0.2s;
         }
+        .ticker-tts-btn:active { transform: scale(0.9); }
+        .ticker-tts-btn.speaking { background: #ef4444; }
 
         /* --- DANA BEBAS DROPDOWN --- */
         .dana-bebas-card {
@@ -571,6 +578,9 @@
         <!-- TICKER DI DALAM HOME TAB -->
         <div class="ticker-wrapper" id="ticker-wrapper-home" style="display:none;">
             <div class="ticker-track" id="ticker-track-home"></div>
+            <button class="ticker-tts-btn" id="ticker-tts-btn" onclick="toggleTickerTTS()" title="Bacakan info">
+                <i class="ph ph-speaker-high"></i>
+            </button>
         </div>
 
         <div class="dashboard-grid" id="main-dashboard-grid">
@@ -579,7 +589,7 @@
                 <div id="sum-cash" class="stat-value" style="color: #10b981;">0</div>
             </div>
             
-            <div class="stat-card secret-xrp" id="card-emergency">
+            <div class="stat-card" id="card-emergency">
                 <div class="stat-label">🚑 DANA DARURAT</div>
                 <div id="sum-xrp" class="stat-value" style="color: var(--primary);">0</div>
             </div>
@@ -653,11 +663,11 @@
             <div id="dana-bebas-list">
                 <!-- Rows rendered by JS -->
             </div>
-            <button class="btn-pill" style="margin-top:10px; background:var(--primary); color:white; width:100%; justify-content:center; padding:10px;" onclick="addDanaBebasRow()"><i class="ph ph-plus"></i> Tambah Sumber Dana</button>
+            <button id="btn-add-danabebas" class="btn-pill" style="margin-top:10px; background:var(--primary); color:white; width:100%; justify-content:center; padding:10px; display:none;" onclick="addDanaBebasRow()"><i class="ph ph-plus"></i> Tambah Sumber Dana</button>
             <div class="dana-bebas-total">Total Dana Bebas: <span id="dana-bebas-total">Rp 0</span></div>
         </div>
 
-        <div id="xrp-input-section" class="secret-xrp" style="flex-direction: column;">
+        <div id="xrp-input-section" style="display:flex; flex-direction: column;">
             <div class="section-title" style="margin-top:30px;">
                 <span>🚑 Dana Darurat (XRP)</span>
                 <div class="btn-action-group" style="display:flex; gap:8px;">
@@ -845,9 +855,13 @@
         dana_bebas: []
     };
     let xrpPrice = 0;
+    let usdPrice = 0;
     let editingId = null;
     let editingType = null;
     let currentWishlistType = 'temp'; 
+    let tickerMessages = [];
+    let tickerIndex = 0;
+    let tickerRotateTimer = null;
 
     // --- SECRET & THEME LOGIC START ---
     
@@ -927,6 +941,44 @@
 
     // --- SECRET & THEME LOGIC END ---
 
+    async function fetchUSD() {
+        try {
+            const res = await fetch('https://api.frankfurter.app/latest?from=USD&to=IDR');
+            const json = await res.json();
+            if (json.rates && json.rates.IDR) {
+                usdPrice = json.rates.IDR;
+                saveUsdPriceDaily();
+                updateTicker();
+                return;
+            }
+        } catch(e) {}
+        try {
+            const res = await fetch('https://open.er-api.com/v6/latest/USD');
+            const json = await res.json();
+            if (json.rates && json.rates.IDR) {
+                usdPrice = json.rates.IDR;
+                saveUsdPriceDaily();
+                updateTicker();
+                return;
+            }
+        } catch(e) {}
+    }
+
+    function saveUsdPriceDaily() {
+        const today = new Date().toISOString().slice(0,10);
+        const savedDate = localStorage.getItem('usdPriceDate');
+        if (savedDate !== today && usdPrice > 0) {
+            const prevCurrent = localStorage.getItem('usdPriceCurrent');
+            localStorage.setItem(USD_PRICE_KEY, prevCurrent || usdPrice);
+            localStorage.setItem('usdPriceDate', today);
+        }
+        if (!localStorage.getItem(USD_PRICE_KEY) && usdPrice > 0) {
+            localStorage.setItem(USD_PRICE_KEY, usdPrice);
+        }
+        if (usdPrice > 0) localStorage.setItem('usdPriceCurrent', usdPrice);
+        updateTicker();
+    }
+
     function init() {
         db.ref('financeData').on('value', (snapshot) => {
             const val = snapshot.val();
@@ -954,6 +1006,8 @@
         resetDailyForm();
         fetchXRP();
         setInterval(fetchXRP, 30000);
+        fetchUSD();
+        setInterval(fetchUSD, 60000);
     }
 
     function getVal(id) { const el = document.getElementById(id); return el ? (parseFloat(el.value) || 0) : 0; }
@@ -968,13 +1022,13 @@
         const btnSave = document.getElementById(`btn-save-${section}`);
         if (isEditing) { 
             inputs.forEach(el => el.disabled = false); 
-            if(section === 'danabebas') document.querySelectorAll('.dana-bebas-select').forEach(el => el.disabled = false);
             btnEdit.style.display = 'none'; btnSave.style.display = 'flex'; 
+            if(section === 'danabebas') { document.querySelectorAll('.dana-bebas-select').forEach(el => el.disabled = false); document.getElementById('btn-add-danabebas').style.display = 'flex'; renderDanaBebas(); }
         } 
         else { 
             inputs.forEach(el => el.disabled = true); 
-            if(section === 'danabebas') document.querySelectorAll('.dana-bebas-select').forEach(el => el.disabled = true);
             btnEdit.style.display = 'flex'; btnSave.style.display = 'none'; 
+            if(section === 'danabebas') { document.querySelectorAll('.dana-bebas-select').forEach(el => el.disabled = true); document.getElementById('btn-add-danabebas').style.display = 'none'; renderDanaBebas(); }
         }
     }
 
@@ -1040,13 +1094,11 @@
             netWorth += totalHidden;
             note = "(Bank + Gaji + Piutang + Hidden) - Tetap";
         }
-        if (isXrpRevealed) {
-            netWorth += totalXrpIDR;
-            note = isHiddenAssetsActive ? "(Bank + Gaji + Piutang + Hidden + XRP) - Tetap" : "(Bank + Gaji + Piutang + XRP) - Tetap";
-        }
 
-        document.getElementById('networth-note').innerText = note;
-        document.getElementById('display-networth').innerText = formatRupiah(netWorth);
+        const elNote = document.getElementById('networth-note');
+        if (elNote) elNote.innerText = note;
+        const elNW = document.getElementById('display-networth');
+        if (elNW) elNW.innerText = formatRupiah(netWorth);
         document.getElementById('sum-cash').innerText = formatRupiah(totalCash);
         document.getElementById('sum-gaji').innerText = formatRupiah(totalGaji);
         document.getElementById('sum-xrp').innerText = formatRupiah(totalXrpIDR);
@@ -1301,6 +1353,7 @@
     // ============ TICKER NOTIF BERJALAN ============
     let lastXrpPrice = null;
     const XRP_PRICE_KEY = 'xrpPriceYesterday';
+    const USD_PRICE_KEY = 'usdPriceYesterday';
 
     function buildTickerMessages() {
         const msgs = [];
@@ -1319,6 +1372,20 @@
             }
         }
         // Kalau belum ada data kemarin, tidak tampilkan XRP sama sekali
+
+        // 1b. USD ke IDR naik/turun
+        const savedYesterdayUsd = parseFloat(localStorage.getItem(USD_PRICE_KEY) || '0');
+        if (usdPrice > 0 && savedYesterdayUsd > 0) {
+            const diffUsd = usdPrice - savedYesterdayUsd;
+            const pctUsd = ((diffUsd / savedYesterdayUsd) * 100).toFixed(2);
+            if (diffUsd > 0) {
+                msgs.push({ text: `💵 USD NAIK +${pctUsd}%  ${formatRupiah(savedYesterdayUsd)} → ${formatRupiah(usdPrice)}  (+${formatRupiah(diffUsd)})`, cls: 'ticker-up' });
+            } else if (diffUsd < 0) {
+                msgs.push({ text: `💵 USD TURUN ${pctUsd}%  ${formatRupiah(savedYesterdayUsd)} → ${formatRupiah(usdPrice)}  (${formatRupiah(diffUsd)})`, cls: 'ticker-down' });
+            } else {
+                msgs.push({ text: `💵 USD tidak bergerak dari kemarin  ${formatRupiah(usdPrice)}`, cls: 'ticker-neutral' });
+            }
+        }
 
         // 2. Pengeluaran perbandingan
         const now = new Date();
@@ -1378,18 +1445,74 @@
 
     function updateTicker() {
         const msgs = buildTickerMessages();
-        // Use home ticker
         const wrapper = document.getElementById('ticker-wrapper-home');
         const track = document.getElementById('ticker-track-home');
         if (!wrapper || !track) return;
-        if (msgs.length === 0) { wrapper.style.display = 'none'; return; }
-        wrapper.style.display = 'block';
-        // Duplicate messages for seamless loop
-        const allMsgs = [...msgs, ...msgs];
-        track.innerHTML = allMsgs.map(m => `<span class="ticker-item ${m.cls}">${m.text} &nbsp;•&nbsp;</span>`).join('');
-        // Adjust animation speed - sedikit lebih cepat tapi tidak terlalu cepat
-        const speed = Math.max(18, msgs.length * 9);
-        track.style.animation = `ticker-scroll ${speed}s linear infinite`;
+        if (msgs.length === 0) { wrapper.style.display = 'none'; tickerMessages = []; return; }
+        wrapper.style.display = 'flex';
+        tickerMessages = msgs;
+
+        track.innerHTML = msgs.map((m, idx) => `<div class="ticker-item ${m.cls}${idx===0 ? ' show' : ''}">${m.text}</div>`).join('');
+
+        clearInterval(tickerRotateTimer);
+        tickerIndex = 0;
+        if (msgs.length > 1) {
+            tickerRotateTimer = setInterval(() => {
+                const items = track.querySelectorAll('.ticker-item');
+                if (!items.length) return;
+                items[tickerIndex].classList.remove('show');
+                tickerIndex = (tickerIndex + 1) % items.length;
+                items[tickerIndex].classList.add('show');
+            }, 4000);
+        }
+    }
+
+    // ============ TEXT TO SPEECH UNTUK TICKER ============
+    let ttsUtterances = [];
+
+    function cleanTextForSpeech(text) {
+        // Hapus emoji dan karakter simbol, sisakan teks & angka
+        return text.replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{2190}-\u{21FF}]/gu, '')
+                   .replace(/&nbsp;|•/g, ' ')
+                   .replace(/\s+/g, ' ')
+                   .trim();
+    }
+
+    function toggleTickerTTS() {
+        const btn = document.getElementById('ticker-tts-btn');
+        if (!('speechSynthesis' in window)) {
+            showToast("TTS tidak didukung di perangkat ini");
+            return;
+        }
+
+        if (speechSynthesis.speaking) {
+            speechSynthesis.cancel();
+            btn.classList.remove('speaking');
+            btn.innerHTML = '<i class="ph ph-speaker-high"></i>';
+            return;
+        }
+
+        if (!tickerMessages || tickerMessages.length === 0) {
+            showToast("Tidak ada info untuk dibacakan");
+            return;
+        }
+
+        btn.classList.add('speaking');
+        btn.innerHTML = '<i class="ph ph-speaker-x"></i>';
+
+        const fullText = tickerMessages.map(m => cleanTextForSpeech(m.text)).join('. ');
+        const utter = new SpeechSynthesisUtterance(fullText);
+        utter.lang = 'id-ID';
+        utter.rate = 1;
+        utter.onend = () => {
+            btn.classList.remove('speaking');
+            btn.innerHTML = '<i class="ph ph-speaker-high"></i>';
+        };
+        utter.onerror = () => {
+            btn.classList.remove('speaking');
+            btn.innerHTML = '<i class="ph ph-speaker-high"></i>';
+        };
+        speechSynthesis.speak(utter);
     }
 
     // Save XRP price daily for comparison
@@ -1397,11 +1520,12 @@
         const today = new Date().toISOString().slice(0,10);
         const savedDate = localStorage.getItem('xrpPriceDate');
         if (savedDate !== today && xrpPrice > 0) {
-            // If new day, save yesterday's closing price
-            if (savedDate) {
-                localStorage.setItem(XRP_PRICE_KEY, localStorage.getItem('xrpPriceCurrent') || xrpPrice);
-            }
+            const prevCurrent = localStorage.getItem('xrpPriceCurrent');
+            localStorage.setItem(XRP_PRICE_KEY, prevCurrent || xrpPrice);
             localStorage.setItem('xrpPriceDate', today);
+        }
+        if (!localStorage.getItem(XRP_PRICE_KEY) && xrpPrice > 0) {
+            localStorage.setItem(XRP_PRICE_KEY, xrpPrice);
         }
         if (xrpPrice > 0) localStorage.setItem('xrpPriceCurrent', xrpPrice);
         updateTicker();
