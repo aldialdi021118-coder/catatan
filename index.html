@@ -67,6 +67,194 @@
             --card-grad: linear-gradient(135deg, #000, #222); --input-bg: #f4f4f4; --border-color: #000; --radius: 0px;
         }
 
+        /* ===== TEMA BERGAMBAR (WALLPAPER THEMES) ===== */
+
+        /* Galaxy / Milky Way */
+        [data-theme="galaxy"] {
+            --bg-body: #0a0018; --card-bg: rgba(20,10,40,0.82); --text-main: #e8d5ff; --text-sub: #a78bfa;
+            --primary: #c084fc; --primary-grad: linear-gradient(135deg, #7c3aed, #a855f7);
+            --card-grad: linear-gradient(135deg, #1e0a3c, #0a0018); --input-bg: rgba(30,10,60,0.7); --border-color: rgba(167,139,250,0.3);
+        }
+        [data-theme="galaxy"] body { 
+            background-image: url('https://images.unsplash.com/photo-1462331940025-496dfbfc7564?w=1200&q=80&auto=format');
+            background-size: cover; background-attachment: fixed; background-position: center;
+        }
+        [data-theme="galaxy"] .card-bg-blur { backdrop-filter: blur(12px); }
+
+        /* Sakura / Cherry Blossom */
+        [data-theme="sakura"] {
+            --bg-body: rgba(255,240,248,0.5); --card-bg: rgba(255,255,255,0.78); --text-main: #831843; --text-sub: #db2777;
+            --primary: #ec4899; --primary-grad: linear-gradient(135deg, #ec4899, #be185d);
+            --card-grad: linear-gradient(135deg, #881337, #9f1239); --input-bg: rgba(253,242,248,0.85); --border-color: #fbcfe8;
+        }
+        [data-theme="sakura"] body {
+            background-image: url('https://images.unsplash.com/photo-1522383225653-ed111181a951?w=1200&q=80&auto=format');
+            background-size: cover; background-attachment: fixed; background-position: center;
+        }
+
+        /* Northern Lights / Aurora */
+        [data-theme="aurora"] {
+            --bg-body: rgba(2,20,30,0.6); --card-bg: rgba(5,30,45,0.82); --text-main: #a7f3d0; --text-sub: #34d399;
+            --primary: #10b981; --primary-grad: linear-gradient(135deg, #059669, #0d9488);
+            --card-grad: linear-gradient(135deg, #064e3b, #0c4a6e); --input-bg: rgba(5,40,55,0.7); --border-color: rgba(52,211,153,0.3);
+        }
+        [data-theme="aurora"] body {
+            background-image: url('https://images.unsplash.com/photo-1531366936337-7c912a4589a7?w=1200&q=80&auto=format');
+            background-size: cover; background-attachment: fixed; background-position: center;
+        }
+
+        /* Mountain / Foggy Hills */
+        [data-theme="mountain"] {
+            --bg-body: rgba(240,248,255,0.5); --card-bg: rgba(255,255,255,0.8); --text-main: #1e3a5f; --text-sub: #4a7fa5;
+            --primary: #2563eb; --primary-grad: linear-gradient(135deg, #1d4ed8, #0ea5e9);
+            --card-grad: linear-gradient(135deg, #1e3a5f, #0f2d4a); --input-bg: rgba(240,248,255,0.85); --border-color: #bae6fd;
+        }
+        [data-theme="mountain"] body {
+            background-image: url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1200&q=80&auto=format');
+            background-size: cover; background-attachment: fixed; background-position: center;
+        }
+
+        /* Forest / Jungle */
+        [data-theme="forest"] {
+            --bg-body: rgba(240,253,244,0.4); --card-bg: rgba(255,255,255,0.8); --text-main: #14532d; --text-sub: #166534;
+            --primary: #16a34a; --primary-grad: linear-gradient(135deg, #15803d, #065f46);
+            --card-grad: linear-gradient(135deg, #14532d, #052e16); --input-bg: rgba(240,253,244,0.85); --border-color: #bbf7d0;
+        }
+        [data-theme="forest"] body {
+            background-image: url('https://images.unsplash.com/photo-1448375240586-882707db888b?w=1200&q=80&auto=format');
+            background-size: cover; background-attachment: fixed; background-position: center;
+        }
+
+        /* Desert / Sand Dunes */
+        [data-theme="desert"] {
+            --bg-body: rgba(254,243,199,0.45); --card-bg: rgba(255,252,240,0.82); --text-main: #78350f; --text-sub: #b45309;
+            --primary: #d97706; --primary-grad: linear-gradient(135deg, #d97706, #b45309);
+            --card-grad: linear-gradient(135deg, #78350f, #451a03); --input-bg: rgba(254,243,199,0.85); --border-color: #fde68a;
+        }
+        [data-theme="desert"] body {
+            background-image: url('https://images.unsplash.com/photo-1509316785289-025f5b846b35?w=1200&q=80&auto=format');
+            background-size: cover; background-attachment: fixed; background-position: center;
+        }
+
+        /* City Night / Neon City */
+        [data-theme="citynight"] {
+            --bg-body: rgba(5,5,20,0.55); --card-bg: rgba(10,10,35,0.83); --text-main: #f0f4ff; --text-sub: #94a3b8;
+            --primary: #6366f1; --primary-grad: linear-gradient(135deg, #4f46e5, #7c3aed);
+            --card-grad: linear-gradient(135deg, #1e1b4b, #0f0a1a); --input-bg: rgba(20,15,50,0.75); --border-color: rgba(99,102,241,0.35);
+        }
+        [data-theme="citynight"] body {
+            background-image: url('https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=1200&q=80&auto=format');
+            background-size: cover; background-attachment: fixed; background-position: center;
+        }
+
+        /* Beach / Tropical */
+        [data-theme="beach"] {
+            --bg-body: rgba(240,249,255,0.45); --card-bg: rgba(255,255,255,0.82); --text-main: #0c4a6e; --text-sub: #0369a1;
+            --primary: #0ea5e9; --primary-grad: linear-gradient(135deg, #0ea5e9, #06b6d4);
+            --card-grad: linear-gradient(135deg, #0c4a6e, #164e63); --input-bg: rgba(240,249,255,0.85); --border-color: #7dd3fc;
+        }
+        [data-theme="beach"] body {
+            background-image: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1200&q=80&auto=format');
+            background-size: cover; background-attachment: fixed; background-position: center;
+        }
+
+        /* Dark Marble */
+        [data-theme="marble"] {
+            --bg-body: rgba(15,15,20,0.5); --card-bg: rgba(30,28,35,0.85); --text-main: #f0ece8; --text-sub: #a8a09a;
+            --primary: #d4af37; --primary-grad: linear-gradient(135deg, #d4af37, #a07830);
+            --card-grad: linear-gradient(135deg, #1a1a1a, #0a0a0a); --input-bg: rgba(40,38,45,0.8); --border-color: rgba(212,175,55,0.3);
+        }
+        [data-theme="marble"] body {
+            background-image: url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&q=80&auto=format');
+            background-size: cover; background-attachment: fixed; background-position: center;
+        }
+
+        /* Rain / Rainy Window */
+        [data-theme="rain"] {
+            --bg-body: rgba(20,30,50,0.55); --card-bg: rgba(25,35,60,0.83); --text-main: #cbd5e1; --text-sub: #64748b;
+            --primary: #38bdf8; --primary-grad: linear-gradient(135deg, #0284c7, #0ea5e9);
+            --card-grad: linear-gradient(135deg, #0f172a, #1e293b); --input-bg: rgba(30,45,70,0.75); --border-color: rgba(56,189,248,0.3);
+        }
+        [data-theme="rain"] body {
+            background-image: url('https://images.unsplash.com/photo-1428592953211-077101b2021b?w=1200&q=80&auto=format');
+            background-size: cover; background-attachment: fixed; background-position: center;
+        }
+
+        /* Abstract Gradient Waves */
+        [data-theme="waves"] {
+            --bg-body: #f5f0ff; --card-bg: rgba(255,255,255,0.85); --text-main: #3b0764; --text-sub: #7c3aed;
+            --primary: #8b5cf6; --primary-grad: linear-gradient(135deg, #7c3aed, #ec4899);
+            --card-grad: linear-gradient(135deg, #4c1d95, #1e1b4b); --input-bg: rgba(245,240,255,0.85); --border-color: #ddd6fe;
+        }
+        [data-theme="waves"] body {
+            background-image: url('https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=1200&q=80&auto=format');
+            background-size: cover; background-attachment: fixed; background-position: center;
+        }
+
+        /* Snowfall / Winter */
+        [data-theme="winter"] {
+            --bg-body: rgba(240,248,255,0.4); --card-bg: rgba(255,255,255,0.85); --text-main: #1e3a5f; --text-sub: #4a7fa5;
+            --primary: #3b82f6; --primary-grad: linear-gradient(135deg, #3b82f6, #60a5fa);
+            --card-grad: linear-gradient(135deg, #1e3a5f, #0f2d4a); --input-bg: rgba(240,248,255,0.88); --border-color: #bfdbfe;
+        }
+        [data-theme="winter"] body {
+            background-image: url('https://images.unsplash.com/photo-1491002052546-bf38f186af56?w=1200&q=80&auto=format');
+            background-size: cover; background-attachment: fixed; background-position: center;
+        }
+
+        /* All wallpaper themes: apply backdrop blur to cards */
+        [data-theme="galaxy"] .modern-card,
+        [data-theme="galaxy"] .asset-list-container,
+        [data-theme="galaxy"] .stat-card,
+        [data-theme="galaxy"] .bottom-nav,
+        [data-theme="sakura"] .modern-card,
+        [data-theme="sakura"] .asset-list-container,
+        [data-theme="sakura"] .stat-card,
+        [data-theme="sakura"] .bottom-nav,
+        [data-theme="aurora"] .modern-card,
+        [data-theme="aurora"] .asset-list-container,
+        [data-theme="aurora"] .stat-card,
+        [data-theme="aurora"] .bottom-nav,
+        [data-theme="mountain"] .modern-card,
+        [data-theme="mountain"] .asset-list-container,
+        [data-theme="mountain"] .stat-card,
+        [data-theme="mountain"] .bottom-nav,
+        [data-theme="forest"] .modern-card,
+        [data-theme="forest"] .asset-list-container,
+        [data-theme="forest"] .stat-card,
+        [data-theme="forest"] .bottom-nav,
+        [data-theme="desert"] .modern-card,
+        [data-theme="desert"] .asset-list-container,
+        [data-theme="desert"] .stat-card,
+        [data-theme="desert"] .bottom-nav,
+        [data-theme="citynight"] .modern-card,
+        [data-theme="citynight"] .asset-list-container,
+        [data-theme="citynight"] .stat-card,
+        [data-theme="citynight"] .bottom-nav,
+        [data-theme="beach"] .modern-card,
+        [data-theme="beach"] .asset-list-container,
+        [data-theme="beach"] .stat-card,
+        [data-theme="beach"] .bottom-nav,
+        [data-theme="marble"] .modern-card,
+        [data-theme="marble"] .asset-list-container,
+        [data-theme="marble"] .stat-card,
+        [data-theme="marble"] .bottom-nav,
+        [data-theme="rain"] .modern-card,
+        [data-theme="rain"] .asset-list-container,
+        [data-theme="rain"] .stat-card,
+        [data-theme="rain"] .bottom-nav,
+        [data-theme="waves"] .modern-card,
+        [data-theme="waves"] .asset-list-container,
+        [data-theme="waves"] .stat-card,
+        [data-theme="waves"] .bottom-nav,
+        [data-theme="winter"] .modern-card,
+        [data-theme="winter"] .asset-list-container,
+        [data-theme="winter"] .stat-card,
+        [data-theme="winter"] .bottom-nav {
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         html, body { width: 100%; overflow-x: hidden; }
         body {
@@ -278,28 +466,99 @@
             text-align: center; color: var(--text-sub); padding: 40px 20px;
             font-size: 0.9rem; font-weight: 600;
         }
+
+        /* --- TICKER / NOTIF BERJALAN --- */
+        .ticker-wrapper {
+            width: 100%; overflow: hidden; background: var(--card-bg);
+            border: 1px solid var(--border-color); border-radius: 10px;
+            padding: 8px 0; margin-bottom: 16px; position: relative;
+        }
+        .ticker-track {
+            display: flex; gap: 40px; white-space: nowrap;
+            animation: ticker-scroll 30s linear infinite;
+        }
+        .ticker-track:hover { animation-play-state: paused; }
+        .ticker-item {
+            font-size: 0.8rem; font-weight: 700; flex-shrink: 0;
+            display: flex; align-items: center; gap: 6px;
+        }
+        .ticker-up { color: #10b981; }
+        .ticker-down { color: #ef4444; }
+        .ticker-neutral { color: var(--text-sub); }
+        @keyframes ticker-scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* --- DANA BEBAS DROPDOWN --- */
+        .dana-bebas-card {
+            background: var(--card-bg); border-radius: var(--radius);
+            border: 2px dashed #10b981; padding: 16px; margin-bottom: 20px;
+        }
+        .dana-bebas-title {
+            font-size: 0.75rem; font-weight: 700; color: #10b981;
+            text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px;
+        }
+        .dana-bebas-row {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 10px 0; border-bottom: 1px solid var(--border-color); gap: 10px;
+        }
+        .dana-bebas-row:last-child { border-bottom: none; }
+        .dana-bebas-select {
+            flex: 1; background: var(--input-bg); border: 1px solid var(--border-color);
+            border-radius: 8px; padding: 8px 10px; font-size: 0.85rem;
+            font-weight: 600; color: var(--text-main); font-family: var(--font-main);
+        }
+        .dana-bebas-input {
+            width: 130px; text-align: right; font-weight: 700; font-size: 0.95rem;
+            color: #10b981; border: none; background: transparent; outline: none;
+        }
+        .dana-bebas-input:not(:disabled) {
+            background: var(--input-bg); border-radius: 8px; padding: 7px; border: 1px solid #10b981;
+        }
+        .dana-bebas-total {
+            text-align: right; padding: 10px 0 0; font-size: 0.85rem; font-weight: 700;
+            color: #10b981;
+        }
     </style>
 </head>
 <body>
 
     <div id="toast" class="toast-notification">Notification</div>
 
+
     <div id="theme-modal" class="theme-modal" onclick="closeThemeModal(event)">
         <div class="theme-content">
-            <h3 style="margin-top:0; color:var(--text-main); text-align:center;">Pilih Tema</h3>
+            <h3 style="margin-top:0; color:var(--text-main); text-align:center;">🎨 Pilih Tema</h3>
+            <div style="font-size:0.7rem; font-weight:700; color:var(--text-sub); letter-spacing:1px; margin-bottom:8px; text-transform:uppercase;">— Tema Standar —</div>
             <div class="theme-grid">
-                <div class="theme-option" onclick="setTheme('default')" style="background:#f1f5f9; color:#0f172a;">Default</div>
-                <div class="theme-option" onclick="setTheme('dark')" style="background:#0f172a; color:#fff;">Dark Mode</div>
-                <div class="theme-option" onclick="setTheme('hacking')" style="background:#000; color:#00ff41; border-color:#00ff41;">Hacking</div>
-                <div class="theme-option" onclick="setTheme('cyberpunk')" style="background:#13132b; color:#ff00ff; border-color:#00e5ff;">Cyberpunk</div>
-                <div class="theme-option" onclick="setTheme('luxury')" style="background:#1c1c1c; color:#d4af37; border-color:#d4af37;">Luxury</div>
-                <div class="theme-option" onclick="setTheme('nature')" style="background:#ecfdf5; color:#064e3b;">Nature</div>
-                <div class="theme-option" onclick="setTheme('ocean')" style="background:#f0f9ff; color:#0c4a6e;">Ocean</div>
-                <div class="theme-option" onclick="setTheme('sunset')" style="background:#fff7ed; color:#7c2d12;">Sunset</div>
-                <div class="theme-option" onclick="setTheme('retro')" style="background:#e8e0d0; color:#4a4136;">Retro</div>
-                <div class="theme-option" onclick="setTheme('mono')" style="background:#fff; color:#000; border:1px solid #000;">Mono</div>
+                <div class="theme-option" onclick="setTheme('default')" style="background:#f1f5f9; color:#0f172a;">☀️ Default</div>
+                <div class="theme-option" onclick="setTheme('dark')" style="background:#0f172a; color:#fff;">🌙 Dark</div>
+                <div class="theme-option" onclick="setTheme('hacking')" style="background:#000; color:#00ff41; border-color:#00ff41;">💻 Hacking</div>
+                <div class="theme-option" onclick="setTheme('cyberpunk')" style="background:#13132b; color:#ff00ff; border-color:#00e5ff;">🤖 Cyberpunk</div>
+                <div class="theme-option" onclick="setTheme('luxury')" style="background:#1c1c1c; color:#d4af37; border-color:#d4af37;">👑 Luxury</div>
+                <div class="theme-option" onclick="setTheme('nature')" style="background:#ecfdf5; color:#064e3b;">🌿 Nature</div>
+                <div class="theme-option" onclick="setTheme('ocean')" style="background:#f0f9ff; color:#0c4a6e;">🌊 Ocean</div>
+                <div class="theme-option" onclick="setTheme('sunset')" style="background:#fff7ed; color:#7c2d12;">🌅 Sunset</div>
+                <div class="theme-option" onclick="setTheme('retro')" style="background:#e8e0d0; color:#4a4136;">📼 Retro</div>
+                <div class="theme-option" onclick="setTheme('mono')" style="background:#fff; color:#000; border:1px solid #000;">⬛ Mono</div>
             </div>
-            <button class="btn-modern btn-cancel" onclick="document.getElementById('theme-modal').style.display='none'">Tutup</button>
+            <div style="font-size:0.7rem; font-weight:700; color:var(--text-sub); letter-spacing:1px; margin: 14px 0 8px; text-transform:uppercase;">— Tema Bergambar 🖼️ —</div>
+            <div class="theme-grid" style="grid-template-columns: 1fr 1fr 1fr;">
+                <div class="theme-option" onclick="setTheme('galaxy')" style="background:linear-gradient(135deg,#0a0018,#3b0764); color:#e8d5ff; border-color:#7c3aed; font-size:0.72rem;">🌌 Galaxy</div>
+                <div class="theme-option" onclick="setTheme('sakura')" style="background:linear-gradient(135deg,#fce7f3,#fbcfe8); color:#831843; font-size:0.72rem;">🌸 Sakura</div>
+                <div class="theme-option" onclick="setTheme('aurora')" style="background:linear-gradient(135deg,#022c22,#065f46); color:#a7f3d0; border-color:#10b981; font-size:0.72rem;">🌠 Aurora</div>
+                <div class="theme-option" onclick="setTheme('mountain')" style="background:linear-gradient(135deg,#1e3a5f,#4a7fa5); color:#e0f2fe; font-size:0.72rem;">🏔️ Gunung</div>
+                <div class="theme-option" onclick="setTheme('forest')" style="background:linear-gradient(135deg,#14532d,#166534); color:#bbf7d0; font-size:0.72rem;">🌲 Hutan</div>
+                <div class="theme-option" onclick="setTheme('desert')" style="background:linear-gradient(135deg,#78350f,#d97706); color:#fef3c7; font-size:0.72rem;">🏜️ Gurun</div>
+                <div class="theme-option" onclick="setTheme('citynight')" style="background:linear-gradient(135deg,#0f0a1a,#1e1b4b); color:#c7d2fe; border-color:#6366f1; font-size:0.72rem;">🌃 Kota Malam</div>
+                <div class="theme-option" onclick="setTheme('beach')" style="background:linear-gradient(135deg,#0c4a6e,#0ea5e9); color:#e0f9ff; font-size:0.72rem;">🏖️ Pantai</div>
+                <div class="theme-option" onclick="setTheme('marble')" style="background:linear-gradient(135deg,#1a1a1a,#333); color:#d4af37; border-color:#d4af37; font-size:0.72rem;">🪨 Marmer</div>
+                <div class="theme-option" onclick="setTheme('rain')" style="background:linear-gradient(135deg,#0f172a,#1e293b); color:#7dd3fc; border-color:#38bdf8; font-size:0.72rem;">🌧️ Hujan</div>
+                <div class="theme-option" onclick="setTheme('waves')" style="background:linear-gradient(135deg,#4c1d95,#ec4899); color:#ede9fe; font-size:0.72rem;">🌈 Waves</div>
+                <div class="theme-option" onclick="setTheme('winter')" style="background:linear-gradient(135deg,#1e3a5f,#3b82f6); color:#dbeafe; font-size:0.72rem;">❄️ Salju</div>
+            </div>
+            <button class="btn-modern btn-cancel" onclick="document.getElementById('theme-modal').style.display='none'" style="margin-top:16px;">Tutup</button>
         </div>
     </div>
 
@@ -308,6 +567,10 @@
             <div class="net-worth-label">Total Kekayaan Bersih</div>
             <div id="display-networth" class="net-worth-value">...</div>
             <div id="networth-note" style="font-size: 0.8rem; opacity: 0.7;">(Bank + Gaji + Piutang) - Tetap</div>
+        </div>
+        <!-- TICKER DI DALAM HOME TAB -->
+        <div class="ticker-wrapper" id="ticker-wrapper-home" style="display:none;">
+            <div class="ticker-track" id="ticker-track-home"></div>
         </div>
 
         <div class="dashboard-grid" id="main-dashboard-grid">
@@ -376,6 +639,22 @@
                 <div class="asset-row"><div class="asset-info"><span style="font-size:1.5rem;">💵</span><span class="asset-name">Gaji Sesi 1</span></div><input type="number" id="in-gaji1" class="asset-input-small assets-input" placeholder="0" disabled></div>
                 <div class="asset-row"><div class="asset-info"><span style="font-size:1.5rem;">💵</span><span class="asset-name">Gaji Sesi 2</span></div><input type="number" id="in-gaji2" class="asset-input-small assets-input" placeholder="0" disabled></div>
             </div>
+        </div>
+
+        <div class="section-title" style="margin-top:20px;">
+            <span style="color:#10b981;">💚 Dana Bebas</span>
+            <div class="btn-action-group" style="display:flex; gap:8px;">
+                <button id="btn-edit-danabebas" class="btn-pill edit" onclick="toggleEditMode('danabebas', true)"><i class="ph ph-pencil-simple"></i> Edit</button>
+                <button id="btn-save-danabebas" class="btn-pill save" onclick="saveAndLock('danabebas')"><i class="ph ph-check-circle"></i> Simpan</button>
+            </div>
+        </div>
+        <div class="dana-bebas-card">
+            <div class="dana-bebas-title">💡 Dana Bebas (tidak masuk total kekayaan bersih)</div>
+            <div id="dana-bebas-list">
+                <!-- Rows rendered by JS -->
+            </div>
+            <button class="btn-pill" style="margin-top:10px; background:var(--primary); color:white; width:100%; justify-content:center; padding:10px;" onclick="addDanaBebasRow()"><i class="ph ph-plus"></i> Tambah Sumber Dana</button>
+            <div class="dana-bebas-total">Total Dana Bebas: <span id="dana-bebas-total">Rp 0</span></div>
         </div>
 
         <div id="xrp-input-section" class="secret-xrp" style="flex-direction: column;">
@@ -562,7 +841,8 @@
         },
         debts: [], expenses: [],
         wishlist_temp: [], wishlist_perm: [], hidden_assets: [],
-        monthly_reports: {}
+        monthly_reports: {},
+        dana_bebas: []
     };
     let xrpPrice = 0;
     let editingId = null;
@@ -590,32 +870,9 @@
         setTimeout(() => { toast.classList.remove('show'); }, 2000);
     }
 
-    // Secret 1: XRP (Total Net Worth 6 Clicks)
-    let netWorthClickCount = 0;
-    let netWorthClickTimer;
+    // Secret 1: XRP (SHORTCUT DIHAPUS - XRP tidak ikut dari klik Net Worth)
     let isXrpRevealed = false;
-
-    document.getElementById('card-networth').addEventListener('click', function() {
-        clearTimeout(netWorthClickTimer);
-        netWorthClickCount++;
-        
-        if (netWorthClickCount === 6) {
-            isXrpRevealed = !isXrpRevealed;
-            const elements = document.querySelectorAll('.secret-xrp');
-            elements.forEach(el => {
-                if (isXrpRevealed) {
-                    if(el.tagName === 'DIV') el.classList.add('show-xrp-block'); 
-                    else el.classList.add('show-xrp');
-                } else {
-                    el.classList.remove('show-xrp', 'show-xrp-block');
-                }
-            });
-            showToast(isXrpRevealed ? "Dana Darurat: ON" : "Dana Darurat: OFF");
-            calcAll();
-            netWorthClickCount = 0;
-        }
-        netWorthClickTimer = setTimeout(() => { netWorthClickCount = 0; }, 800);
-    });
+    // Shortcut klik pada card net worth untuk XRP telah dihapus per permintaan
 
     // Secret 2: Hidden Assets (Home Nav 5 Clicks)
     let homeClickCount = 0;
@@ -681,14 +938,16 @@
                 data.wishlist_perm = val.wishlist_perm ? Object.values(val.wishlist_perm) : [];
                 data.hidden_assets = val.hidden_assets ? Object.values(val.hidden_assets) : [];
                 data.monthly_reports = val.monthly_reports ? val.monthly_reports : {};
+                data.dana_bebas = val.dana_bebas ? (Array.isArray(val.dana_bebas) ? val.dana_bebas : Object.values(val.dana_bebas)) : [];
                 
                 if (document.querySelectorAll('.asset-input-small:not([disabled]), .xrp-field:not([disabled])').length === 0) {
                     populateInputs();
                 }
                 
                 renderDebt(); renderDaily(); renderMonthly(); 
-                renderWishlist(); renderHiddenAssetsTable();
+                renderWishlist(); renderHiddenAssetsTable(); renderDanaBebas();
                 calcAll();
+                updateTicker();
                 checkAutoTransfer();
             }
         });
@@ -703,17 +962,34 @@
         let selector = '.assets-input';
         if(section === 'xrp') selector = '.xrp-input';
         if(section === 'fixed') selector = '.fixed-input';
+        if(section === 'danabebas') selector = '.dana-bebas-input';
         const inputs = document.querySelectorAll(selector);
         const btnEdit = document.getElementById(`btn-edit-${section}`);
         const btnSave = document.getElementById(`btn-save-${section}`);
-        if (isEditing) { inputs.forEach(el => el.disabled = false); btnEdit.style.display = 'none'; btnSave.style.display = 'flex'; } 
-        else { inputs.forEach(el => el.disabled = true); btnEdit.style.display = 'flex'; btnSave.style.display = 'none'; }
+        if (isEditing) { 
+            inputs.forEach(el => el.disabled = false); 
+            if(section === 'danabebas') document.querySelectorAll('.dana-bebas-select').forEach(el => el.disabled = false);
+            btnEdit.style.display = 'none'; btnSave.style.display = 'flex'; 
+        } 
+        else { 
+            inputs.forEach(el => el.disabled = true); 
+            if(section === 'danabebas') document.querySelectorAll('.dana-bebas-select').forEach(el => el.disabled = true);
+            btnEdit.style.display = 'flex'; btnSave.style.display = 'none'; 
+        }
     }
 
     function saveAndLock(section) {
         if (section === 'assets') ['cash_wallet', 'bca', 'blu', 'neo', 'rumah', 'shopee', 'gopay', 'gaji1', 'gaji2'].forEach(k => data.inputs[k] = getVal('in-' + k.replace('_', '-')));
         else if (section === 'fixed') ['fixed_ibuk', 'fixed_bapak', 'fixed_adik', 'fixed_wifi'].forEach(k => data.inputs[k] = getVal('in-' + k.replace('_', '-')));
         else if (section === 'xrp') ['xrp_aldi', 'xrp_susi', 'buy_aldi', 'buy_susi'].forEach(k => data.inputs[k] = getVal(k.replace('_', '-')));
+        else if (section === 'danabebas') {
+            document.querySelectorAll('.dana-bebas-input').forEach((el, i) => {
+                if (data.dana_bebas[i]) data.dana_bebas[i].amount = parseFloat(el.value) || 0;
+            });
+            document.querySelectorAll('.dana-bebas-select').forEach((el, i) => {
+                if (data.dana_bebas[i]) data.dana_bebas[i].source = el.value;
+            });
+        }
         db.ref('financeData').set(data); toggleEditMode(section, false); showToast("Data Tersimpan"); calcAll(); 
     }
 
@@ -968,9 +1244,168 @@
     function delHidden(id) { if(confirm('Hapus aset?')) { data.hidden_assets = data.hidden_assets.filter(x => x.id !== id); db.ref('financeData').set(data); }}
     function cancelHideEdit() { document.getElementById('hide-name').value = ''; document.getElementById('hide-amount').value = ''; editingId = null; const btn = document.getElementById('btn-hide-submit'); btn.innerText = 'Tambah Aset'; document.getElementById('btn-hide-cancel').style.display = 'none'; }
 
-    async function fetchXRP() { try { const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=ripple&vs_currencies=idr'); const json = await res.json(); if(json.ripple && json.ripple.idr) { xrpPrice = json.ripple.idr; document.getElementById('xrp-live-price').innerText = formatRupiah(xrpPrice); document.getElementById('xrp-live-price').style.color = "#10b981"; calcAll(); return; } } catch(e) {} try { const res = await fetch('https://api.coinpaprika.com/v1/tickers/xrp-xrp?quotes=IDR'); const json = await res.json(); if(json.quotes && json.quotes.IDR && json.quotes.IDR.price) { xrpPrice = json.quotes.IDR.price; document.getElementById('xrp-live-price').innerText = formatRupiah(xrpPrice); document.getElementById('xrp-live-price').style.color = "#10b981"; calcAll(); return; } } catch(e) { document.getElementById('xrp-live-price').innerText = "Gagal Load"; } }
+    async function fetchXRP() { try { const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=ripple&vs_currencies=idr'); const json = await res.json(); if(json.ripple && json.ripple.idr) { xrpPrice = json.ripple.idr; document.getElementById('xrp-live-price').innerText = formatRupiah(xrpPrice); document.getElementById('xrp-live-price').style.color = "#10b981"; calcAll(); saveXrpPriceDaily(); return; } } catch(e) {} try { const res = await fetch('https://api.coinpaprika.com/v1/tickers/xrp-xrp?quotes=IDR'); const json = await res.json(); if(json.quotes && json.quotes.IDR && json.quotes.IDR.price) { xrpPrice = json.quotes.IDR.price; document.getElementById('xrp-live-price').innerText = formatRupiah(xrpPrice); document.getElementById('xrp-live-price').style.color = "#10b981"; calcAll(); saveXrpPriceDaily(); return; } } catch(e) { document.getElementById('xrp-live-price').innerText = "Gagal Load"; updateTicker(); } }
 
     function switchTab(name, btn) { document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active')); document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active')); document.getElementById('tab-' + name).classList.add('active'); btn.classList.add('active'); window.scrollTo(0,0); }
+
+    // ============ DANA BEBAS ============
+    const DANA_SOURCES = [
+        'Uang Tunai', 'Bank BCA', 'Blu BCA', 'Bank Neo', 'Tab. Rumah',
+        'ShopeePay', 'GoPay', 'OVO', 'Dana', 'LinkAja', 'Jenius', 'BRI', 'BNI', 'Mandiri', 'Lainnya'
+    ];
+
+    function renderDanaBebas() {
+        const list = document.getElementById('dana-bebas-list');
+        if (!list) return;
+        if (!data.dana_bebas) data.dana_bebas = [];
+        list.innerHTML = '';
+        const isEditing = document.getElementById('btn-save-danabebas') && document.getElementById('btn-save-danabebas').style.display === 'flex';
+        data.dana_bebas.forEach((item, i) => {
+            const options = DANA_SOURCES.map(s => `<option value="${s}" ${item.source === s ? 'selected' : ''}>${s}</option>`).join('');
+            list.innerHTML += `
+            <div class="dana-bebas-row" id="db-row-${i}">
+                <select class="dana-bebas-select" onchange="data.dana_bebas[${i}].source=this.value" ${isEditing ? '' : 'disabled'}>${options}</select>
+                <input type="number" class="dana-bebas-input" value="${item.amount || ''}" placeholder="0" ${isEditing ? '' : 'disabled'} onchange="data.dana_bebas[${i}].amount=parseFloat(this.value)||0; updateDanaBebasTotal();">
+                ${isEditing ? `<button onclick="removeDanaBebas(${i})" style="background:#fee2e2; color:red; border:none; border-radius:8px; padding:6px 10px; cursor:pointer; font-size:0.9rem;"><i class="ph ph-trash"></i></button>` : ''}
+            </div>`;
+        });
+        updateDanaBebasTotal();
+    }
+
+    function addDanaBebasRow() {
+        if (!data.dana_bebas) data.dana_bebas = [];
+        data.dana_bebas.push({ source: 'Uang Tunai', amount: 0 });
+        // Force edit mode
+        document.getElementById('btn-edit-danabebas').style.display = 'none';
+        document.getElementById('btn-save-danabebas').style.display = 'flex';
+        renderDanaBebas();
+        // Enable inputs after render
+        document.querySelectorAll('.dana-bebas-input').forEach(el => el.disabled = false);
+        document.querySelectorAll('.dana-bebas-select').forEach(el => el.disabled = false);
+    }
+
+    function removeDanaBebas(i) {
+        data.dana_bebas.splice(i, 1);
+        renderDanaBebas();
+        document.querySelectorAll('.dana-bebas-input').forEach(el => el.disabled = false);
+        document.querySelectorAll('.dana-bebas-select').forEach(el => el.disabled = false);
+    }
+
+    function updateDanaBebasTotal() {
+        if (!data.dana_bebas) return;
+        const total = data.dana_bebas.reduce((a, b) => a + (parseFloat(b.amount) || 0), 0);
+        const el = document.getElementById('dana-bebas-total');
+        if (el) el.innerText = formatRupiah(total);
+    }
+
+    // ============ TICKER NOTIF BERJALAN ============
+    let lastXrpPrice = null;
+    const XRP_PRICE_KEY = 'xrpPriceYesterday';
+
+    function buildTickerMessages() {
+        const msgs = [];
+
+        // 1. XRP naik/turun (hanya tampilkan pergerakan, bukan live price)
+        const savedYesterdayXrp = parseFloat(localStorage.getItem(XRP_PRICE_KEY) || '0');
+        if (xrpPrice > 0 && savedYesterdayXrp > 0) {
+            const diff = xrpPrice - savedYesterdayXrp;
+            const pct = ((diff / savedYesterdayXrp) * 100).toFixed(2);
+            if (diff > 0) {
+                msgs.push({ text: `📈 XRP NAIK +${pct}%  ${formatRupiah(savedYesterdayXrp)} → ${formatRupiah(xrpPrice)}  (+${formatRupiah(diff)})`, cls: 'ticker-up' });
+            } else if (diff < 0) {
+                msgs.push({ text: `📉 XRP TURUN ${pct}%  ${formatRupiah(savedYesterdayXrp)} → ${formatRupiah(xrpPrice)}  (${formatRupiah(diff)})`, cls: 'ticker-down' });
+            } else {
+                msgs.push({ text: `➡️ XRP tidak bergerak dari kemarin  ${formatRupiah(xrpPrice)}`, cls: 'ticker-neutral' });
+            }
+        }
+        // Kalau belum ada data kemarin, tidak tampilkan XRP sama sekali
+
+        // 2. Pengeluaran perbandingan
+        const now = new Date();
+        const allExpenses = [...data.expenses];
+        // Tambahkan dari monthly reports juga
+        if (data.monthly_reports) {
+            Object.values(data.monthly_reports).forEach(arr => { if(Array.isArray(arr)) arr.forEach(e => allExpenses.push(e)); });
+        }
+
+        // Kemarin vs 2 hari lalu
+        const todayStr = now.toISOString().slice(0,10);
+        const yesterday = new Date(now); yesterday.setDate(yesterday.getDate()-1);
+        const yesterday2 = new Date(now); yesterday2.setDate(yesterday2.getDate()-2);
+        const yesterdayStr = yesterday.toISOString().slice(0,10);
+        const yesterday2Str = yesterday2.toISOString().slice(0,10);
+
+        const expYest = allExpenses.filter(e => e.date && e.date.slice(0,10) === yesterdayStr).reduce((a,b) => a+(b.amount||0), 0);
+        const expYest2 = allExpenses.filter(e => e.date && e.date.slice(0,10) === yesterday2Str).reduce((a,b) => a+(b.amount||0), 0);
+        if (expYest > 0 || expYest2 > 0) {
+            const diff = expYest - expYest2;
+            if (diff > 0) msgs.push({ text: `⚠️ Pengeluaran kemarin LEBIH BESAR dari 2 hari lalu (+${formatRupiah(diff)})`, cls: 'ticker-down' });
+            else if (diff < 0) msgs.push({ text: `✅ Pengeluaran kemarin lebih kecil dari 2 hari lalu (${formatRupiah(diff)})`, cls: 'ticker-up' });
+            else msgs.push({ text: `➡️ Pengeluaran kemarin sama dengan 2 hari lalu`, cls: 'ticker-neutral' });
+        }
+
+        // Minggu ini vs minggu lalu
+        const dayOfWeek = now.getDay() === 0 ? 6 : now.getDay() - 1; // Senin=0
+        const startThisWeek = new Date(now); startThisWeek.setDate(now.getDate() - dayOfWeek); startThisWeek.setHours(0,0,0,0);
+        const startLastWeek = new Date(startThisWeek); startLastWeek.setDate(startLastWeek.getDate()-7);
+        const endLastWeek = new Date(startThisWeek); endLastWeek.setDate(endLastWeek.getDate()-1); endLastWeek.setHours(23,59,59,999);
+
+        const expThisWeek = allExpenses.filter(e => { const d = new Date(e.date); return d >= startThisWeek && d <= now; }).reduce((a,b) => a+(b.amount||0), 0);
+        const expLastWeek = allExpenses.filter(e => { const d = new Date(e.date); return d >= startLastWeek && d <= endLastWeek; }).reduce((a,b) => a+(b.amount||0), 0);
+        if (expThisWeek > 0 || expLastWeek > 0) {
+            const diff = expThisWeek - expLastWeek;
+            if (diff > 0) msgs.push({ text: `📊 Pengeluaran minggu ini LEBIH BESAR dari minggu lalu (+${formatRupiah(diff)})`, cls: 'ticker-down' });
+            else if (diff < 0) msgs.push({ text: `📊 Pengeluaran minggu ini lebih kecil dari minggu lalu (${formatRupiah(Math.abs(diff))})`, cls: 'ticker-up' });
+            else msgs.push({ text: `📊 Pengeluaran minggu ini sama dengan minggu lalu`, cls: 'ticker-neutral' });
+        }
+
+        // Bulan ini vs bulan lalu
+        const startThisMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+        const startLastMonth = new Date(now.getFullYear(), now.getMonth()-1, 1);
+        const endLastMonth = new Date(now.getFullYear(), now.getMonth(), 0, 23, 59, 59);
+
+        const expThisMonth = allExpenses.filter(e => { const d = new Date(e.date); return d >= startThisMonth && d <= now; }).reduce((a,b) => a+(b.amount||0), 0);
+        const expLastMonth = allExpenses.filter(e => { const d = new Date(e.date); return d >= startLastMonth && d <= endLastMonth; }).reduce((a,b) => a+(b.amount||0), 0);
+        if (expThisMonth > 0 || expLastMonth > 0) {
+            const diff = expThisMonth - expLastMonth;
+            if (diff > 0) msgs.push({ text: `🗓️ Pengeluaran bulan ini LEBIH BESAR dari bulan lalu (+${formatRupiah(diff)})`, cls: 'ticker-down' });
+            else if (diff < 0) msgs.push({ text: `🗓️ Pengeluaran bulan ini lebih kecil dari bulan lalu (${formatRupiah(Math.abs(diff))})`, cls: 'ticker-up' });
+            else msgs.push({ text: `🗓️ Pengeluaran bulan ini sama dengan bulan lalu`, cls: 'ticker-neutral' });
+        }
+
+        return msgs;
+    }
+
+    function updateTicker() {
+        const msgs = buildTickerMessages();
+        // Use home ticker
+        const wrapper = document.getElementById('ticker-wrapper-home');
+        const track = document.getElementById('ticker-track-home');
+        if (!wrapper || !track) return;
+        if (msgs.length === 0) { wrapper.style.display = 'none'; return; }
+        wrapper.style.display = 'block';
+        // Duplicate messages for seamless loop
+        const allMsgs = [...msgs, ...msgs];
+        track.innerHTML = allMsgs.map(m => `<span class="ticker-item ${m.cls}">${m.text} &nbsp;•&nbsp;</span>`).join('');
+        // Adjust animation speed - sedikit lebih cepat tapi tidak terlalu cepat
+        const speed = Math.max(18, msgs.length * 9);
+        track.style.animation = `ticker-scroll ${speed}s linear infinite`;
+    }
+
+    // Save XRP price daily for comparison
+    function saveXrpPriceDaily() {
+        const today = new Date().toISOString().slice(0,10);
+        const savedDate = localStorage.getItem('xrpPriceDate');
+        if (savedDate !== today && xrpPrice > 0) {
+            // If new day, save yesterday's closing price
+            if (savedDate) {
+                localStorage.setItem(XRP_PRICE_KEY, localStorage.getItem('xrpPriceCurrent') || xrpPrice);
+            }
+            localStorage.setItem('xrpPriceDate', today);
+        }
+        if (xrpPrice > 0) localStorage.setItem('xrpPriceCurrent', xrpPrice);
+        updateTicker();
+    }
 
     init();
 </script>
